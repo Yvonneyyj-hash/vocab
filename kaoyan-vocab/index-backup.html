@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>考研词汇</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f3efe9;
+  --card: #e8e1d5;
+  --card-hover: #ddd4c3;
+  --green: #7d8b6f;
+  --green-dark: #5a6950;
+  --green-light: #a3b398;
+  --brown: #a0907a;
+  --brown-dark: #6b5d4e;
+  --brown-light: #c4b8a7;
+  --text: #4a4036;
+  --text-light: #8a7e6e;
+  --border: #d4cbc0;
+  --correct: #7d9b7a;
+  --wrong: #c49a8a;
+  --accent: #b8956a;
+  --white: #faf8f4;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 24px 60px;
+}
+
+/* Header */
+.header { text-align: center; padding: 40px 0 20px; }
+.header h1 { font-size: 28px; font-weight: 700; color: var(--green-dark); letter-spacing: 2px; }
+.header p { color: var(--text-light); font-size: 14px; margin-top: 6px; }
+
+/* Views */
+.view { display: none; }
+.view.active { display: block; }
+
+/* --- Settings --- */
+.settings-card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 36px 32px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(74,64,54,0.06);
+}
+.settings-card h2 {
+  font-size: 20px;
+  color: var(--brown-dark);
+  margin-bottom: 8px;
+}
+.settings-card .sub {
+  color: var(--text-light);
+  font-size: 14px;
+  margin-bottom: 28px;
+}
+.count-options {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+.count-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  border: 2px solid var(--border);
+  background: var(--white);
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  transition: all .2s;
+}
+.count-btn:hover { border-color: var(--green); color: var(--green-dark); }
+.count-btn.selected {
+  background: var(--green);
+  color: #fff;
+  border-color: var(--green);
+}
+.start-btn {
+  padding: 14px 48px;
+  border-radius: 12px;
+  border: none;
+  background: var(--green);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all .2s;
+}
+.start-btn:hover { background: var(--green-dark); transform: translateY(-1px); }
+
+/* Stats */
+.stats-row {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--text-light);
+}
+.stat-item {
+  background: var(--card);
+  border-radius: 10px;
+  padding: 10px 16px;
+}
+.stat-item strong { color: var(--green-dark); font-size: 16px; }
+
+/* --- Progress bar --- */
+.progress-wrap {
+  background: var(--card);
+  border-radius: 10px;
+  height: 8px;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--green);
+  border-radius: 10px;
+  transition: width .3s;
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text-light);
+  margin-bottom: 8px;
+}
+
+/* --- Study Card --- */
+.study-card {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 40px 32px;
+  box-shadow: 0 4px 20px rgba(74,64,54,0.08);
+  text-align: center;
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.study-card .word-en {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--green-dark);
+  letter-spacing: 1px;
+}
+.study-card .phonetic {
+  font-size: 15px;
+  color: var(--text-light);
+  margin: 6px 0 16px;
+}
+.study-card .meaning-main {
+  font-size: 22px;
+  color: var(--brown-dark);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.study-card .pos-tag {
+  display: inline-block;
+  background: var(--green-light);
+  color: #fff;
+  font-size: 13px;
+  padding: 3px 12px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+.study-card .detail-section {
+  text-align: left;
+  margin-top: 8px;
+}
+.study-card .detail-label {
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 14px 0 4px;
+}
+.study-card .example-en {
+  font-size: 15px;
+  color: var(--text);
+  font-style: italic;
+  margin-bottom: 2px;
+}
+.study-card .example-cn {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 6px;
+}
+.study-card .phrase-item, .study-card .expr-item {
+  font-size: 14px;
+  color: var(--text);
+  padding: 3px 0;
+}
+.study-card .phrase-item::before { content: "▸ "; color: var(--green); }
+.study-card .expr-item::before { content: "✦ "; color: var(--accent); }
+.study-card .mu-item {
+  font-size: 13px;
+  color: var(--brown-dark);
+  padding: 4px 0;
+  font-style: italic;
+}
+.study-card .mu-item::before { content: "🎭 "; }
+
+.card-nav {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 24px;
+}
+.nav-btn {
+  padding: 10px 24px;
+  border-radius: 10px;
+  border: 2px solid var(--border);
+  background: var(--white);
+  cursor: pointer;
+  font-size: 15px;
+  color: var(--text);
+  transition: all .2s;
+}
+.nav-btn:hover { border-color: var(--green); color: var(--green-dark); }
+.nav-btn.primary { background: var(--green); color: #fff; border-color: var(--green); }
+.nav-btn.primary:hover { background: var(--green-dark); }
+
+/* --- Quiz --- */
+.quiz-card {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 40px 32px;
+  box-shadow: 0 4px 20px rgba(74,64,54,0.08);
+  text-align: center;
+}
+.quiz-prompt {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--green-dark);
+  margin-bottom: 8px;
+}
+.quiz-hint {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 24px;
+}
+.quiz-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  font-size: 18px;
+  text-align: center;
+  font-family: inherit;
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+  transition: border-color .2s;
+}
+.quiz-input:focus { border-color: var(--green); }
+.quiz-input.correct { border-color: var(--correct); background: #f0f5ee; }
+.quiz-input.wrong { border-color: var(--wrong); background: #faf0ed; }
+.quiz-feedback {
+  margin-top: 16px;
+  font-size: 15px;
+  min-height: 24px;
+}
+.quiz-feedback.correct { color: #5a7a55; }
+.quiz-feedback.wrong { color: #b0654e; }
+.quiz-submit {
+  margin-top: 16px;
+  padding: 12px 36px;
+  border-radius: 10px;
+  border: none;
+  background: var(--green);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+}
+.quiz-submit:hover { background: var(--green-dark); }
+.quiz-submit:disabled { opacity: 0.5; cursor: default; }
+
+/* --- Results --- */
+.results-card {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 40px 32px;
+  box-shadow: 0 4px 20px rgba(74,64,54,0.08);
+  text-align: center;
+}
+.results-score {
+  font-size: 64px;
+  font-weight: 700;
+  color: var(--green-dark);
+}
+.results-detail {
+  font-size: 15px;
+  color: var(--text-light);
+  margin: 8px 0 24px;
+}
+.review-list {
+  text-align: left;
+  max-width: 500px;
+  margin: 0 auto;
+}
+.review-item {
+  background: var(--bg);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  border-left: 4px solid var(--wrong);
+}
+.review-item.passed { border-left-color: var(--correct); }
+.review-item .rw-word { font-size: 18px; font-weight: 700; color: var(--green-dark); }
+.review-item .rw-meaning { font-size: 15px; color: var(--brown-dark); margin: 4px 0; }
+.review-item .rw-yours { font-size: 13px; color: var(--text-light); }
+.review-item .rw-yours span { font-weight: 600; }
+.review-item .rw-yours span.right { color: #5a7a55; }
+.review-item .rw-yours span.wrong { color: #b0654e; }
+
+.phase-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+.phase-badge.study { background: #e8dccf; color: var(--brown-dark); }
+.phase-badge.quiz-cn { background: #dce4d5; color: var(--green-dark); }
+.phase-badge.quiz-en { background: #d5dce4; color: #4a6070; }
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.view.active { animation: fadeIn .35s ease; }
+.study-card, .quiz-card, .results-card { animation: fadeIn .3s ease; }
+
+/* Homepage & Calendar */
+.home-layout { display: flex; gap: 20px; align-items: flex-start; }
+.home-left { flex: 2; min-width: 0; }
+.home-right { flex: 1; min-width: 200px; position: sticky; top: 20px; }
+.home-stats { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
+.home-stat { background: var(--card); border-radius: 10px; padding: 10px 14px; text-align: center; min-width: 60px; }
+.home-stat .val { font-size: 18px; font-weight: 700; color: var(--green-dark); }
+.home-stat .lbl { font-size: 10px; color: var(--text-light); margin-top: 1px; }
+.calendar-wrap { background: var(--white); border-radius: 16px; padding: 16px; box-shadow: 0 2px 12px rgba(74,64,54,0.06); }
+.cal-month-label { font-size: 13px; font-weight: 700; color: var(--brown-dark); margin: 14px 0 2px; text-align: center; }
+.cal-month-label:first-child { margin-top: 0; }
+.cal-estimate { font-size: 12px; color: var(--accent); text-align: center; margin-bottom: 12px; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
+.cal-day-hdr { font-size: 9px; color: var(--text-light); padding: 2px 0; }
+.cal-day { aspect-ratio: 1; border-radius: 6px; font-size: 11px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; transition: all .15s; color: var(--text); }
+.cal-day.has-data { background: #dce4d5; cursor: pointer; font-weight: 600; color: var(--green-dark); }
+.cal-day.has-data:hover { background: var(--green-light); color: #fff; }
+.cal-day.today { border: 2px solid var(--accent); }
+.cal-day.empty { color: #ddd; }
+.cal-day .err-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--wrong); position: absolute; top: 2px; right: 2px; }
+
+.right-panel { background: var(--white); border-radius: 16px; padding: 24px 20px; box-shadow: 0 2px 12px rgba(74,64,54,0.06); }
+.right-panel h2 { font-size: 17px; color: var(--brown-dark); margin-bottom: 4px; text-align: center; }
+.right-panel .sub { color: var(--text-light); font-size: 12px; margin-bottom: 16px; text-align: center; }
+.right-count-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+.right-count-options .count-btn { width: 100%; height: 48px; }
+.right-panel .start-btn { width: 100%; }
+.right-panel .reset-section { text-align: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+
+/* Modal */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(74,64,54,0.4); z-index: 100; justify-content: center; align-items: center; padding: 20px; }
+.modal-overlay.active { display: flex; }
+.modal { background: var(--white); border-radius: 20px; padding: 28px 24px; max-width: 580px; width: 100%; max-height: 85vh; overflow-y: auto; box-shadow: 0 8px 40px rgba(74,64,54,0.15); animation: fadeIn .25s ease; }
+.modal h3 { font-size: 18px; color: var(--brown-dark); margin-bottom: 16px; text-align: center; }
+.modal-close { position: sticky; top: 0; float: right; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-light); padding: 4px 8px; border-radius: 6px; z-index: 1; }
+.modal-close:hover { background: var(--bg); }
+.word-chip { display: block; width: 100%; text-align: left; padding: 12px 16px; background: var(--bg); border-radius: 10px; margin-bottom: 8px; border: none; cursor: pointer; transition: all .15s; font-family: inherit; color: var(--text); }
+.word-chip:hover { background: var(--card-hover); }
+.word-chip .wc-en { font-weight: 700; color: var(--green-dark); font-size: 15px; }
+.word-chip .wc-cn { color: var(--brown-dark); font-size: 13px; }
+.word-chip .wc-wrong { display: block; border-left: 3px solid var(--wrong); padding-left: 8px; margin-top: 4px; font-size: 12px; color: var(--wrong); }
+.reset-section { text-align: center; margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--border); }
+.reset-btn { background: none; border: 1px solid var(--wrong); color: var(--wrong); padding: 8px 20px; border-radius: 8px; cursor: pointer; font-size: 13px; transition: all .2s; }
+.reset-btn:hover { background: #faf0ed; }
+
+/* Responsive */
+/* Tablet / iPad (both orientations) */
+@media (max-width: 900px) {
+  .header { padding: 24px 0 12px; }
+  .header h1 { font-size: 24px; }
+  .container { padding: 20px 16px 40px; }
+  .home-layout { gap: 16px; }
+  .home-left { flex: 1.4; }
+  .home-right { flex: 1; position: static; min-width: 170px; }
+  .right-panel { padding: 20px 16px; }
+  .right-panel h2 { font-size: 15px; }
+  .right-count-options .count-btn { height: 40px; font-size: 14px; }
+  .home-stats { gap: 6px; }
+  .home-stat { padding: 8px 10px; min-width: 52px; }
+  .home-stat .val { font-size: 15px; }
+  .home-stat .lbl { font-size: 9px; }
+  .calendar-wrap { padding: 12px; }
+  .cal-month-label { font-size: 12px; margin: 10px 0 2px; }
+  .cal-day { font-size: 10px; border-radius: 4px; }
+  .cal-grid { gap: 1px; }
+  .cal-day-hdr { font-size: 8px; }
+
+  .modal { max-width: 90vw; padding: 20px 16px; }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .header { padding: 16px 0 8px; }
+  .header h1 { font-size: 22px; }
+  .header p { font-size: 12px; }
+  .container { padding: 12px 12px 32px; }
+  .home-layout { flex-direction: column; gap: 14px; }
+  .home-left { flex: none; }
+  .home-right { position: static; min-width: 0; }
+  .right-panel { padding: 20px 16px; }
+  .right-panel h2 { font-size: 16px; }
+  .right-count-options { grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .right-count-options .count-btn { height: 44px; font-size: 15px; }
+  .home-stats { gap: 5px; }
+  .home-stat { padding: 8px 10px; min-width: 48px; border-radius: 8px; }
+  .home-stat .val { font-size: 14px; }
+  .home-stat .lbl { font-size: 9px; }
+  .calendar-wrap { padding: 10px; border-radius: 12px; }
+  .cal-month-label { font-size: 11px; margin: 10px 0 1px; }
+  .cal-day { font-size: 9px; border-radius: 4px; }
+  .cal-grid { gap: 1px; }
+  .cal-day-hdr { font-size: 7px; }
+
+  .study-card { padding: 24px 16px; }
+  .study-card .word-en { font-size: 26px; }
+  .quiz-prompt { font-size: 22px; }
+  .count-btn { width: 48px; height: 48px; font-size: 16px; }
+  .modal { max-width: 95vw; padding: 18px 14px; border-radius: 16px; }
+  .modal h3 { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>考研词汇</h1>
+    <p style="font-family:'Dancing Script',cursive;font-size:22px">Let the light in</p>
+  </div>
+  <!-- Home View -->
+  <div id="view-home" class="view active">
+    <div class="home-stats" id="home-stats"></div>
+    <div class="home-layout">
+      <div class="home-left">
+        <div class="calendar-wrap" id="calendar-wrap"></div>
+      </div>
+      <div class="home-right">
+        <div class="right-panel">
+          <h2>今日背词计划</h2>
+          <p class="sub">选择每天要学习的单词数量</p>
+          <div class="right-count-options" id="home-count-options">
+            <button class="count-btn" data-count="20">20</button>
+            <button class="count-btn selected" data-count="50">50</button>
+            <button class="count-btn" data-count="100">100</button>
+            <button class="count-btn" data-count="200">200</button>
+          </div>
+          <button class="start-btn" id="btn-start-home">开始学习</button>
+          <div class="reset-section">
+            <button class="reset-btn" id="btn-reset">重置所有进度</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day Detail Modal -->
+  <div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+    <div class="modal" id="modal-content"></div>
+  </div>
+
+  <!-- Settings View -->
+  <div id="view-settings" class="view">
+    <div class="settings-card">
+      <h2>今日背词计划</h2>
+      <p class="sub">选择每天要学习的单词数量</p>
+      <div class="count-options">
+        <button class="count-btn" data-count="20">20</button>
+        <button class="count-btn selected" data-count="50">50</button>
+        <button class="count-btn" data-count="100">100</button>
+        <button class="count-btn" data-count="200">200</button>
+      </div>
+      <button class="start-btn" id="btn-start">开始学习</button>
+      <div class="stats-row" id="stats-row" style="display:none">
+        <div class="stat-item">已坚持 <strong id="stat-days">0</strong> 天</div>
+        <div class="stat-item">已掌握 <strong id="stat-mastered">0</strong> 词</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Study View -->
+  <div id="view-study" class="view">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div class="phase-badge study" style="margin-bottom:0">📖 学习模式</div>
+      <button class="nav-btn" onclick="goHome()" style="font-size:12px;padding:6px 14px">← 返回首页</button>
+    </div>
+    <div class="progress-label"><span>学习进度</span><span id="study-progress-text">1/30</span></div>
+    <div class="progress-wrap"><div class="progress-fill" id="study-progress" style="width:0%"></div></div>
+    <div class="study-card" id="study-card"></div>
+    <div class="card-nav">
+      <button class="nav-btn" id="btn-prev-word">上一个</button>
+      <button class="nav-btn" id="btn-next-word">下一个</button>
+      <button class="nav-btn primary" id="btn-to-quiz-cn">去测试 →</button>
+    </div>
+  </div>
+
+  <!-- Quiz EN→CN View -->
+  <div id="view-quiz-cn" class="view">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div class="phase-badge quiz-cn" style="margin-bottom:0">📝 看英文·写中文</div>
+      <button class="nav-btn" onclick="goHome()" style="font-size:12px;padding:6px 14px">← 返回首页</button>
+    </div>
+    <div class="progress-label"><span>英→中 测试</span><span id="quiz-cn-progress-text">1/30</span></div>
+    <div class="progress-wrap"><div class="progress-fill" id="quiz-cn-progress" style="width:0%"></div></div>
+    <div class="quiz-card" id="quiz-cn-card"></div>
+  </div>
+
+  <!-- Quiz CN→EN View -->
+  <div id="view-quiz-en" class="view">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div class="phase-badge quiz-en" style="margin-bottom:0">✏️ 看中文·写英文</div>
+      <button class="nav-btn" onclick="goHome()" style="font-size:12px;padding:6px 14px">← 返回首页</button>
+    </div>
+    <div class="progress-label"><span>中→英 测试</span><span id="quiz-en-progress-text">1/30</span></div>
+    <div class="progress-wrap"><div class="progress-fill" id="quiz-en-progress" style="width:0%"></div></div>
+    <div class="quiz-card" id="quiz-en-card"></div>
+  </div>
+
+  <!-- Results View -->
+  <div id="view-results" class="view">
+    <div class="results-card" id="results-card"></div>
+  </div>
+</div>
+
+<script>
+// ============ WORD BANK ============
+const WORD_BANK = [
+  {w:"abandon",p:"/əˈbændən/",pos:"v.",m:"放弃；抛弃",ex:"They had to abandon the plan due to lack of funding.",exc:"由于缺乏资金，他们不得不放弃这个计划。",ph:["abandon oneself to 沉溺于","abandon hope 放弃希望"],xp:["abandon ship 弃船逃命"],mu:["\"I had to abandon my post, I had to run away\" — Javert, Les Misérables"]},
+  {w:"abstract",p:"/ˈæbstrækt/",pos:"adj./n.",m:"抽象的；摘要",ex:"The abstract concept was difficult for students to grasp.",exc:"这个抽象概念学生难以理解。",ph:["in the abstract 抽象地","abstract thinking 抽象思维"],xp:[],mu:["\"It is an abstract idea, a dream we cannot touch\" — The Engineer, Miss Saigon"]},
+  {w:"abuse",p:"/əˈbjuːz/",pos:"v./n.",m:"滥用；虐待",ex:"He abused his power as manager to favor his friends.",exc:"他滥用经理职权偏袒朋友。",ph:["drug abuse 药物滥用","abuse of power 滥用权力"],xp:["hurl abuse at sb. 对某人破口大骂"],mu:["\"You have abused your power, Monsieur le Maire\" — Javert, Les Misérables"]},
+  {w:"accelerate",p:"/əkˈseləreɪt/",pos:"v.",m:"加速；促进",ex:"The car accelerated smoothly onto the highway.",exc:"汽车平稳加速驶入高速公路。",ph:["accelerate growth 加速增长","accelerate the pace 加快步伐"],xp:[],mu:["\"I am not throwing away my shot, I am not slowing down\" — Alexander Hamilton, Hamilton"]},
+  {w:"access",p:"/ˈækses/",pos:"n./v.",m:"进入；使用权；访问",ex:"Students have free access to the online library.",exc:"学生可以免费访问在线图书馆。",ph:["have access to 可以使用","gain access 获得进入权限"],xp:["access denied 拒绝访问"],mu:["\"Past the point of no return, no backward glances\" — The Phantom, The Phantom of the Opera"]},
+  {w:"accommodate",p:"/əˈkɒmədeɪt/",pos:"v.",m:"容纳；为……提供住宿；适应",ex:"The hotel can accommodate up to 500 guests.",exc:"这家酒店最多可容纳500位客人。",ph:["accommodate oneself to 适应于"],xp:["accommodate sb. for the night 留某人过夜"],mu:["\"There is a castle on a cloud, I like to go there in my sleep\" — Young Cosette, Les Misérables"]},
+  {w:"accompany",p:"/əˈkʌmpəni/",pos:"v.",m:"陪伴；伴随；为……伴奏",ex:"She accompanied her mother to the hospital.",exc:"她陪母亲去了医院。",ph:["be accompanied by 由……陪同","accompany sb. on piano 用钢琴为某人伴奏"],xp:[],mu:["\"Angel of Music, guide and guardian, grant to me your glory\" — Christine, The Phantom of the Opera"]},
+  {w:"accomplish",p:"/əˈkʌmplɪʃ/",pos:"v.",m:"完成；实现",ex:"We accomplished all our goals for this quarter.",exc:"我们完成了本季度的所有目标。",ph:["accomplish one's mission 完成使命","an accomplished fact 既成事实"],xp:[],mu:["\"I am not throwing away my shot, I am gonna rise up\" — Alexander Hamilton, Hamilton"]},
+  {w:"accumulate",p:"/əˈkjuːmjəleɪt/",pos:"v.",m:"积累；积聚",ex:"Dust accumulated on the shelves while they were away.",exc:"他们不在期间，灰尘在架子上积聚了起来。",ph:["accumulate wealth 积累财富","accumulate experience 积累经验"],xp:[],mu:["\"I have nothing, I have no one, but I have this strength within\" — Jean Valjean, Les Misérables"]},
+  {w:"accurate",p:"/ˈækjərət/",pos:"adj.",m:"准确的；精确的",ex:"The weather forecast proved to be remarkably accurate.",exc:"天气预报被证明非常准确。",ph:["accurate description 准确描述","to be accurate 准确地说"],xp:[],mu:["\"I am the very model of a modern Major-General, I know our mythic history\" — Major-General, The Pirates of Penzance"]},
+  {w:"acknowledge",p:"/əkˈnɒlɪdʒ/",pos:"v.",m:"承认；确认收到；致谢",ex:"He acknowledged his mistake and apologized sincerely.",exc:"他承认了错误并真诚道歉。",ph:["acknowledge receipt of 确认收到","It is generally acknowledged that 普遍认为"],xp:[],mu:["\"I acknowledge you, my creator, before I must go\" — The Creature, Frankenstein the Musical"]},
+  {w:"acquire",p:"/əˈkwaɪər/",pos:"v.",m:"获得；习得",ex:"She acquired a good knowledge of French during her stay in Paris.",exc:"她在巴黎期间掌握了很好的法语知识。",ph:["acquire knowledge 获取知识","acquire a habit 养成习惯"],xp:[],mu:["\"You must acquire a taste for free-form jazz\" — Mark, Rent"]},
+  {w:"adapt",p:"/əˈdæpt/",pos:"v.",m:"适应；改编",ex:"It took him a while to adapt to the new working environment.",exc:"他花了一段时间才适应新的工作环境。",ph:["adapt to 适应","adapt from 由……改编"],xp:[],mu:["\"Something has changed within me, something is not the same\" — Elphaba, Wicked"]},
+  {w:"adequate",p:"/ˈædɪkwət/",pos:"adj.",m:"足够的；适当的",ex:"The supply of food is adequate for the camping trip.",exc:"食物储备足够这次露营旅行。",ph:["adequate for 足够……之用","be adequate to the task 胜任这项工作"],xp:[],mu:["\"Is it adequate, this life I have made for us?\" — Fantine, Les Misérables"]},
+  {w:"administer",p:"/ədˈmɪnɪstər/",pos:"v.",m:"管理；执行；给予",ex:"The fund is administered by a committee of local residents.",exc:"该基金由当地居民委员会管理。",ph:["administer justice 执行法律","administer medicine 给药"],xp:[],mu:["\"I administer the laws, I do not make them\" — Javert, Les Misérables"]},
+  {w:"adopt",p:"/əˈdɒpt/",pos:"v.",m:"采用；收养",ex:"The company decided to adopt a more flexible work policy.",exc:"公司决定采用更灵活的工作政策。",ph:["adopt a method 采用一种方法","adopt a child 收养孩子"],xp:[],mu:["\"I will adopt this child as my own, this I swear\" — Jean Valjean, Les Misérables"]},
+  {w:"advocate",p:"/ˈædvəkeɪt/",pos:"v./n.",m:"提倡；拥护者",ex:"He advocates reducing plastic waste in daily life.",exc:"他提倡在日常生活中减少塑料垃圾。",ph:["advocate for 为……倡导","a strong advocate of 坚定的拥护者"],xp:[],mu:["\"I advocate for those who cannot speak for themselves\" — Enjolras, Les Misérables"]},
+  {w:"afford",p:"/əˈfɔːd/",pos:"v.",m:"负担得起；提供",ex:"Few students can afford to study abroad without a scholarship.",exc:"没有奖学金，很少有学生能负担得起出国留学。",ph:["can't afford to 承担不起","afford protection 提供保护"],xp:["I can't afford the time. 我抽不出时间。"],mu:["\"Can you afford to lose everything you have worked for?\" — Angelica, Hamilton"]},
+  {w:"aggressive",p:"/əˈɡresɪv/",pos:"adj.",m:"侵略的；好斗的；积极进取的",ex:"An aggressive marketing campaign boosted sales by 30%.",exc:"积极的营销活动使销售额增长了30%。",ph:["aggressive behavior 攻击性行为","aggressive expansion 积极扩张"],xp:[],mu:["\"He is aggressive, he is young, he is not throwing away his shot\" — Aaron Burr, Hamilton"]},
+  {w:"allocate",p:"/ˈæləkeɪt/",pos:"v.",m:"分配；拨出",ex:"The government allocated funds for the new school project.",exc:"政府为新学校项目拨出了资金。",ph:["allocate resources 分配资源","allocate time 分配时间"],xp:[],mu:["\"I allocate my days, each hour counted, each minute measured\" — Mark, Rent"]},
+  {w:"alternative",p:"/ɔːlˈtɜːnətɪv/",pos:"n./adj.",m:"替代方案；替代的",ex:"We need to find an alternative source of energy.",exc:"我们需要找到替代能源。",ph:["have no alternative but to 别无选择只能","alternative solution 替代方案"],xp:[],mu:["\"There is no alternative but to fight, to stand our ground\" — Enjolras, Les Misérables"]},
+  {w:"ambition",p:"/æmˈbɪʃən/",pos:"n.",m:"雄心；野心",ex:"Her ambition is to become a leading researcher in her field.",exc:"她的志向是成为该领域的顶尖研究者。",ph:["achieve one's ambition 实现抱负","political ambition 政治野心"],xp:["burning ambition 强烈的渴望"],mu:["\"Ambition is my folly, I am not sorry for it\" — Alexander Hamilton, Hamilton"]},
+  {w:"anticipate",p:"/ænˈtɪsɪpeɪt/",pos:"v.",m:"预期；期望",ex:"We anticipate that demand will increase significantly next year.",exc:"我们预计明年需求将大幅增加。",ph:["anticipate doing sth. 期待做某事","as anticipated 如预期"],xp:[],mu:["\"I anticipated this, I knew you would come\" — The Phantom, The Phantom of the Opera"]},
+  {w:"apparent",p:"/əˈpærənt/",pos:"adj.",m:"明显的；表面上的",ex:"It soon became apparent that the project was behind schedule.",exc:"很快就明显看出项目落后于计划。",ph:["for no apparent reason 无明显原因","apparent to 对……是明显的"],xp:[],mu:["\"It becomes apparent when you look, the cracks begin to show\" — Evan Hansen, Dear Evan Hansen"]},
+  {w:"appeal",p:"/əˈpiːl/",pos:"v./n.",m:"呼吁；吸引；上诉",ex:"The charity launched an appeal for donations after the earthquake.",exc:"地震后该慈善机构发起了捐款呼吁。",ph:["appeal to 吸引","appeal for 呼吁","make an appeal 发出呼吁"],xp:["the appeal of sth ……的魅力"],mu:["\"I appeal to your humanity, have mercy on this man\" — Jean Valjean, Les Misérables"]},
+  {w:"appreciate",p:"/əˈpriːʃieɪt/",pos:"v.",m:"欣赏；感激；领会",ex:"I really appreciate your help with this difficult task.",exc:"我非常感激你在这项困难任务上的帮助。",ph:["appreciate doing 感激做某事","I'd appreciate it if 如果……我将很感激"],xp:[],mu:["\"You will appreciate what I have done for you someday\" — The Phantom, The Phantom of the Opera"]},
+  {w:"approach",p:"/əˈprəʊtʃ/",pos:"v./n.",m:"接近；方法",ex:"We need a different approach to solve this complex problem.",exc:"我们需要不同的方法来解决这个复杂问题。",ph:["approach to ……的方法","as the deadline approaches 随着截止日期临近"],xp:[],mu:["\"Let us approach the barricade, with courage in our hearts\" — Enjolras, Les Misérables"]},
+  {w:"appropriate",p:"/əˈprəʊpriət/",pos:"adj.",m:"适当的；合适的",ex:"Please wear appropriate clothing for the formal dinner.",exc:"请穿着得体参加正式晚宴。",ph:["appropriate for 适合于","as appropriate 酌情"],xp:[],mu:["\"Is this appropriate behavior for a lady of your station?\" — Lady Catherine, Pride and Prejudice the Musical"]},
+  {w:"assess",p:"/əˈses/",pos:"v.",m:"评估；评定",ex:"The teacher assessed each student's performance throughout the semester.",exc:"老师评估了每个学生整个学期的表现。",ph:["assess the situation 评估情况","assess the impact 评估影响"],xp:[],mu:["\"I assess the situation, I count the enemies ahead\" — George Washington, Hamilton"]},
+  {w:"assign",p:"/əˈsaɪn/",pos:"v.",m:"分配；指派",ex:"Each team member was assigned a specific task.",exc:"每个团队成员都被分配了具体任务。",ph:["assign sb. to do 派某人做","assign importance to 重视"],xp:[],mu:["\"I was assigned a role, a part I never asked to play\" — Elphaba, Wicked"]},
+  {w:"associate",p:"/əˈsəʊʃieɪt/",pos:"v./n./adj.",m:"联系；关联；副的",ex:"People often associate success with hard work and persistence.",exc:"人们通常把成功与努力和坚持联系在一起。",ph:["associate with 与……交往","associate professor 副教授"],xp:[],mu:["\"I associate you with everything I used to love\" — Christine, The Phantom of the Opera"]},
+  {w:"assume",p:"/əˈsjuːm/",pos:"v.",m:"假设；承担",ex:"We can't assume that everyone agrees with this proposal.",exc:"我们不能假设每个人都同意这个提议。",ph:["assume responsibility 承担责任","It is assumed that 据推测"],xp:[],mu:["\"You assume I am the villain, but look into my heart\" — Elphaba, Wicked"]},
+  {w:"attain",p:"/əˈteɪn/",pos:"v.",m:"达到；获得",ex:"She attained her goal of running a marathon in under four hours.",exc:"她实现了在四小时内跑完马拉松的目标。",ph:["attain one's objective 达到目标","attain to 达到（某种状态）"],xp:[],mu:["\"To attain the highest heights, you must first dare to climb\" — Elphaba, Wicked"]},
+  {w:"attribute",p:"/əˈtrɪbjuːt/",pos:"v./n.",m:"归因于；属性",ex:"He attributes his success to years of dedicated practice.",exc:"他把自己的成功归因于多年的专注练习。",ph:["attribute to 归因于","personal attributes 个人品质"],xp:[],mu:["\"I attribute my success to hard work and genius\" — Alexander Hamilton, Hamilton"]},
+  {w:"authority",p:"/ɔːˈθɒrəti/",pos:"n.",m:"权威；当局；权力",ex:"The local authority is responsible for maintaining public parks.",exc:"地方当局负责维护公共公园。",ph:["have authority over 对……有权威","an authority on 某方面的权威","in authority 当权"],xp:[],mu:["\"I answer to no authority but God himself\" — Jean Valjean, Les Misérables"]},
+  {w:"available",p:"/əˈveɪləbəl/",pos:"adj.",m:"可用的；可获得的",ex:"The report will be available online next Monday.",exc:"该报告将于下周一在网上公布。",ph:["available for 可用于","make sth. available 提供某物"],xp:[],mu:["\"I am available, I am waiting here for you\" — Eponine, Les Misérables"]},
+  {w:"barrier",p:"/ˈbæriər/",pos:"n.",m:"障碍；屏障",ex:"Language barriers can make international communication difficult.",exc:"语言障碍会使国际交流变得困难。",ph:["trade barrier 贸易壁垒","break down barriers 打破障碍"],xp:["a barrier to progress 进步的障碍"],mu:["\"There is a barrier between us, a chasm I cannot cross\" — The Phantom, The Phantom of the Opera"]},
+  {w:"beneficial",p:"/ˌbenɪˈfɪʃəl/",pos:"adj.",m:"有益的；有利的",ex:"Regular exercise is beneficial to both physical and mental health.",exc:"经常锻炼对身心健康都有益。",ph:["beneficial to 对……有益","mutually beneficial 互利的"],xp:[],mu:["\"It is beneficial to have friends in high places\" — Aaron Burr, Hamilton"]},
+  {w:"budget",p:"/ˈbʌdʒɪt/",pos:"n./v.",m:"预算；做预算",ex:"The project was completed within the allocated budget.",exc:"项目在分配的预算内完成了。",ph:["on a budget 预算有限","budget deficit 预算赤字","budget for 为……做预算"],xp:[],mu:["\"No budget can contain the dreams we have for this production\" — Max Bialystock, The Producers"]},
+  {w:"capable",p:"/ˈkeɪpəbəl/",pos:"adj.",m:"有能力的",ex:"She is a highly capable researcher with many publications.",exc:"她是一位能力出众、著作颇丰的研究者。",ph:["be capable of 有能力做","a capable leader 有能力的领导"],xp:[],mu:["\"I know what I am capable of, far more than they see\" — Elphaba, Wicked"]},
+  {w:"category",p:"/ˈkætəɡəri/",pos:"n.",m:"类别；范畴",ex:"The books are organized into different categories for easy browsing.",exc:"书籍按不同类别整理以便浏览。",ph:["fall into a category 属于某类别","category management 品类管理"],xp:[],mu:["\"I do not fit into any category they have made\" — Elphaba, Wicked"]},
+  {w:"circumstance",p:"/ˈsɜːkəmstæns/",pos:"n.",m:"环境；情况",ex:"Under no circumstances should you open the door to strangers.",exc:"在任何情况下都不应该给陌生人开门。",ph:["under the circumstances 在这种情况下","in no circumstances 决不"],xp:[],mu:["\"Under these circumstances, we must do what we can\" — Enjolras, Les Misérables"]},
+  {w:"collapse",p:"/kəˈlæps/",pos:"v./n.",m:"倒塌；崩溃；暴跌",ex:"The building collapsed during the earthquake.",exc:"地震中那栋建筑倒塌了。",ph:["economic collapse 经济崩溃","collapse under pressure 在压力下崩溃"],xp:[],mu:["\"The barricade will not collapse while we still draw breath\" — Enjolras, Les Misérables"]},
+  {w:"commission",p:"/kəˈmɪʃən/",pos:"n./v.",m:"委员会；佣金；委托",ex:"The commission published its report on climate change.",exc:"委员会发布了关于气候变化的报告。",ph:["on commission 抽取佣金","commission a study 委托一项研究"],xp:[],mu:["\"By commission of His Majesty, I am here to bring you in\" — Javert, Les Misérables"]},
+  {w:"commit",p:"/kəˈmɪt/",pos:"v.",m:"犯（罪）；承诺；投入",ex:"The government committed to reducing carbon emissions by 40%.",exc:"政府承诺减少40%的碳排放。",ph:["commit suicide 自杀","commit a crime 犯罪","commit oneself to 致力于"],xp:[],mu:["\"I commit myself to this cause, to this revolution\" — Enjolras, Les Misérables"]},
+  {w:"communicate",p:"/kəˈmjuːnɪkeɪt/",pos:"v.",m:"沟通；传达；交流",ex:"The ability to communicate effectively is essential in business.",exc:"有效沟通的能力在商业中至关重要。",ph:["communicate with 与……交流","communicate ideas 传达想法"],xp:[],mu:["\"I cannot communicate the pain I feel inside\" — Evan Hansen, Dear Evan Hansen"]},
+  {w:"compensate",p:"/ˈkɒmpənseɪt/",pos:"v.",m:"补偿；赔偿",ex:"The company compensated workers for the extra overtime hours.",exc:"公司补偿了工人的额外加班时间。",ph:["compensate for 弥补","compensate sb. for 因……赔偿某人"],xp:[],mu:["\"Nothing can compensate for the years I lost in chains\" — Jean Valjean, Les Misérables"]},
+  {w:"competent",p:"/ˈkɒmpɪtənt/",pos:"adj.",m:"有能力的；胜任的",ex:"She is a competent translator who speaks three languages fluently.",exc:"她是一位能流利使用三种语言的称职翻译。",ph:["be competent at 擅长于","competent authority 主管部门"],xp:[],mu:["\"He is competent, he is skilled, but he lacks the fire within\" — Aaron Burr, Hamilton"]},
+  {w:"component",p:"/kəmˈpəʊnənt/",pos:"n./adj.",m:"组成部分；成分",ex:"Trust is a key component of any successful relationship.",exc:"信任是任何成功关系的关键组成部分。",ph:["essential component 基本成分","component parts 零部件"],xp:[],mu:["\"Love is a component of every grand endeavor\" — Collins, Rent"]},
+  {w:"comprehensive",p:"/ˌkɒmprɪˈhensɪv/",pos:"adj.",m:"全面的；综合的",ex:"The report provides a comprehensive overview of the current market.",exc:"该报告全面概述了当前市场情况。",ph:["comprehensive understanding 全面理解","comprehensive insurance 综合保险"],xp:[],mu:["\"I need a comprehensive plan, a strategy for survival\" — Aaron Burr, Hamilton"]},
+  {w:"concentrate",p:"/ˈkɒnsəntreɪt/",pos:"v.",m:"集中；专注",ex:"I find it hard to concentrate with all this background noise.",exc:"背景噪音太大，我发现很难集中注意力。",ph:["concentrate on 专注于","concentrate one's efforts 集中精力"],xp:[],mu:["\"Concentrate, my darling, on the music of the night\" — The Phantom, The Phantom of the Opera"]},
+  {w:"confident",p:"/ˈkɒnfɪdənt/",pos:"adj.",m:"自信的；确信的",ex:"She felt confident about passing the final examination.",exc:"她对通过期末考试充满信心。",ph:["be confident of 对……有信心","confident smile 自信的微笑"],xp:[],mu:["\"I feel confident this time, I have the strength I need\" — Elphaba, Wicked"]},
+  {w:"conflict",p:"/ˈkɒnflɪkt/",pos:"n./v.",m:"冲突；矛盾；抵触",ex:"The two countries have been in conflict for decades.",exc:"这两个国家几十年来一直处于冲突之中。",ph:["in conflict with 与……冲突","conflict of interest 利益冲突","resolve a conflict 解决冲突"],xp:[],mu:["\"This conflict between my duty and my heart tears me apart\" — Javert, Les Misérables"]},
+  {w:"consequence",p:"/ˈkɒnsɪkwəns/",pos:"n.",m:"后果；结果",ex:"He had to face the consequences of his poor decisions.",exc:"他不得不面对自己糟糕决策的后果。",ph:["as a consequence 因此","take the consequences 承担后果"],xp:["in consequence of 由于……的缘故"],mu:["\"You will face the consequences of your little game\" — Carlotta, The Phantom of the Opera"]},
+  {w:"considerable",p:"/kənˈsɪdərəbəl/",pos:"adj.",m:"相当大的；重要的",ex:"The project required a considerable amount of time and resources.",exc:"这个项目需要相当多的时间和资源。",ph:["considerable progress 显著进步","a considerable number 相当数量"],xp:[],mu:["\"A considerable sum, I should think, for your trouble\" — Mme Thenardier, Les Misérables"]},
+  {w:"consistent",p:"/kənˈsɪstənt/",pos:"adj.",m:"一致的；始终如一的",ex:"The results of the experiment were consistent with our hypothesis.",exc:"实验结果与我们的假设一致。",ph:["consistent with 与……一致","consistent performance 稳定的表现"],xp:[],mu:["\"I am consistent in my pursuit of justice, nothing more\" — Javert, Les Misérables"]},
+  {w:"constitute",p:"/ˈkɒnstɪtjuːt/",pos:"v.",m:"构成；组成",ex:"Women constitute more than half of the university's student body.",exc:"女性占该大学学生总数的一半以上。",ph:["constitute a threat 构成威胁","constitute a majority 占多数"],xp:[],mu:["\"These bars constitute my world, these chains my only company\" — Jean Valjean, Les Misérables"]},
+  {w:"consume",p:"/kənˈsjuːm/",pos:"v.",m:"消费；消耗",ex:"This old air conditioner consumes a lot of electricity.",exc:"这台旧空调耗电量很大。",ph:["consume time 消耗时间","consume resources 消耗资源"],xp:["be consumed with 充满（某种感情）"],mu:["\"Let the music consume you, let it take you from this place\" — The Phantom, The Phantom of the Opera"]},
+  {w:"contemporary",p:"/kənˈtempərəri/",pos:"adj./n.",m:"当代的；同时代的",ex:"The gallery exhibits works by contemporary Chinese artists.",exc:"画廊展出当代中国艺术家的作品。",ph:["contemporary society 当代社会","contemporary literature 当代文学"],xp:[],mu:["\"Our contemporary world has no room for men like me\" — Javert, Les Misérables"]},
+  {w:"contribute",p:"/kənˈtrɪbjuːt/",pos:"v.",m:"贡献；捐献；促成",ex:"Everyone should contribute to keeping the environment clean.",exc:"每个人都应该为保持环境清洁做出贡献。",ph:["contribute to 有助于","contribute money 捐款"],xp:[],mu:["\"Everyone must contribute to the cause, give what you can\" — Enjolras, Les Misérables"]},
+  {w:"controversial",p:"/ˌkɒntrəˈvɜːʃəl/",pos:"adj.",m:"有争议的",ex:"The new immigration policy remains highly controversial.",exc:"新的移民政策仍然很有争议。",ph:["a controversial issue 有争议的问题","highly controversial 极具争议"],xp:[],mu:["\"My methods are controversial, but they get results\" — Billy Flynn, Chicago"]},
+  {w:"conventional",p:"/kənˈvenʃənəl/",pos:"adj.",m:"传统的；常规的",ex:"Conventional wisdom suggests that early to bed is good for health.",exc:"传统观念认为早睡对身体好。",ph:["conventional medicine 传统医学","conventional method 常规方法"],xp:[],mu:["\"I do not follow conventional rules, I make my own path\" — Elphaba, Wicked"]},
+  {w:"convince",p:"/kənˈvɪns/",pos:"v.",m:"使确信；说服",ex:"She convinced the investors to support her startup idea.",exc:"她说服了投资者支持她的创业想法。",ph:["convince sb. of sth. 使某人相信某事","convince sb. to do 说服某人做"],xp:[],mu:["\"You must convince the jury that your story is the truth\" — Billy Flynn, Chicago"]},
+  {w:"cooperate",p:"/kəʊˈɒpəreɪt/",pos:"v.",m:"合作；协作",ex:"The two departments cooperated closely on the new product launch.",exc:"两个部门在新产品发布上密切合作。",ph:["cooperate with 与……合作","cooperate in doing 合作做某事"],xp:[],mu:["\"If you cooperate with me, I promise you shall go free\" — Javert, Les Misérables"]},
+  {w:"correspond",p:"/ˌkɒrɪˈspɒnd/",pos:"v.",m:"对应；符合；通信",ex:"The results of the test correspond closely with our predictions.",exc:"测试结果与我们的预测非常吻合。",ph:["correspond to 对应于","correspond with 与……通信"],xp:[],mu:["\"These letters correspond to a love I never knew\" — Christine, The Phantom of the Opera"]},
+  {w:"crucial",p:"/ˈkruːʃəl/",pos:"adj.",m:"关键的；至关重要的",ex:"The next few weeks will be crucial for the success of the project.",exc:"接下来几周对项目的成功至关重要。",ph:["play a crucial role 发挥关键作用","crucial to 对……至关重要"],xp:[],mu:["\"This is the crucial moment, do not let it slip away\" — Alexander Hamilton, Hamilton"]},
+  {w:"debate",p:"/dɪˈbeɪt/",pos:"n./v.",m:"辩论；争论",ex:"There is an ongoing debate about the effects of social media on teenagers.",exc:"关于社交媒体对青少年影响的争论一直在持续。",ph:["under debate 在辩论中","debate on 就……辩论"],xp:[],mu:["\"There is no debate, we fight at dawn, that is final\" — Enjolras, Les Misérables"]},
+  {w:"decline",p:"/dɪˈklaɪn/",pos:"v./n.",m:"下降；衰退；谢绝",ex:"The city's population has been in decline for the past decade.",exc:"过去十年该城市人口持续下降。",ph:["decline an invitation 谢绝邀请","economic decline 经济衰退","on the decline 在下降"],xp:[],mu:["\"I must decline your generous offer, I have other plans\" — Alexander Hamilton, Hamilton"]},
+  {w:"demonstrate",p:"/ˈdemənstreɪt/",pos:"v.",m:"展示；证明；示威",ex:"The experiment demonstrates that water conducts electricity.",exc:"这个实验证明了水能导电。",ph:["demonstrate against 示威反对","demonstrate the ability 展示能力"],xp:[],mu:["\"Let me demonstrate to you the power of the music\" — The Phantom, The Phantom of the Opera"]},
+  {w:"derive",p:"/dɪˈraɪv/",pos:"v.",m:"源自；获得",ex:"Many English words derive from Latin and Greek roots.",exc:"许多英语单词源自拉丁语和希腊语词根。",ph:["derive from 源于","derive pleasure from 从……获得乐趣"],xp:[],mu:["\"I derive my strength from the anger that I feel\" — Elphaba, Wicked"]},
+  {w:"deserve",p:"/dɪˈzɜːv/",pos:"v.",m:"值得；应得",ex:"After all your hard work, you deserve a break.",exc:"在努力工作了这么久之后，你应该休息一下。",ph:["deserve attention 值得关注","deserve to be mentioned 值得一提"],xp:["You deserve it! 你应得的！"],mu:["\"Do you deserve this fate? Do you deserve this pain?\" — Fantine, Les Misérables"]},
+  {w:"despite",p:"/dɪˈspaɪt/",pos:"prep.",m:"尽管；不管",ex:"Despite the rain, the outdoor concert was a huge success.",exc:"尽管下雨，户外音乐会还是取得了巨大成功。",ph:["despite the fact that 尽管事实是","despite all odds 尽管困难重重"],xp:[],mu:["\"Despite everything, I still believe in the goodness of people\" — Anne Frank, The Diary of Anne Frank Musical"]},
+  {w:"device",p:"/dɪˈvaɪs/",pos:"n.",m:"设备；装置；手段",ex:"This small device can monitor your heart rate 24 hours a day.",exc:"这个小设备可以24小时监测你的心率。",ph:["electronic device 电子设备","safety device 安全装置"],xp:["a rhetorical device 修辞手法"],mu:["\"This device will change the world, you just wait and see\" — Caractacus Potts, Chitty Chitty Bang Bang"]},
+  {w:"devote",p:"/dɪˈvəʊt/",pos:"v.",m:"致力于；奉献",ex:"She devoted her entire career to helping underprivileged children.",exc:"她把整个职业生涯都奉献给了帮助贫困儿童。",ph:["devote oneself to 致力于","devote time to 把时间用于"],xp:[],mu:["\"I devote myself entirely to the music, to the art\" — The Phantom, The Phantom of the Opera"]},
+  {w:"dilemma",p:"/dɪˈlemə/",pos:"n.",m:"困境；进退两难",ex:"The government is facing a dilemma between growth and environmental protection.",exc:"政府面临着增长与环保之间的两难选择。",ph:["in a dilemma 处于困境","moral dilemma 道德困境"],xp:[],mu:["\"This dilemma tears at my soul, which way shall I turn?\" — Jean Valjean, Les Misérables"]},
+  {w:"diminish",p:"/dɪˈmɪnɪʃ/",pos:"v.",m:"减少；削弱；贬低",ex:"The pain gradually diminished after taking the medicine.",exc:"服药后疼痛逐渐减轻了。",ph:["diminish the value 降低价值","diminishing returns 收益递减"],xp:[],mu:["\"His power will diminish when the people rise as one\" — Enjolras, Les Misérables"]},
+  {w:"discriminate",p:"/dɪˈskrɪmɪneɪt/",pos:"v.",m:"歧视；区分",ex:"It is illegal to discriminate against someone because of their age.",exc:"因年龄歧视他人是违法的。",ph:["discriminate against 歧视","discriminate between 区分"],xp:[],mu:["\"They discriminate against those who are different, who are green\" — Elphaba, Wicked"]},
+  {w:"distinct",p:"/dɪˈstɪŋkt/",pos:"adj.",m:"明显的；不同的",ex:"There is a distinct difference between the two proposals.",exc:"这两个提案有明显区别。",ph:["distinct from 与……不同","a distinct possibility 很大的可能性"],xp:[],mu:["\"I have a distinct feeling that we have met before\" — Raoul, The Phantom of the Opera"]},
+  {w:"distinguish",p:"/dɪˈstɪŋɡwɪʃ/",pos:"v.",m:"区分；辨别",ex:"Can you distinguish real jade from the imitation?",exc:"你能分辨真假玉吗？",ph:["distinguish between 区分……和……","distinguish oneself 使出众"],xp:[],mu:["\"Can you distinguish truth from lies, reality from dreams?\" — The Phantom, The Phantom of the Opera"]},
+  {w:"distribute",p:"/dɪˈstrɪbjuːt/",pos:"v.",m:"分配；分发",ex:"The charity distributes food and blankets to the homeless every winter.",exc:"该慈善机构每年冬天向无家可归者分发食物和毯子。",ph:["distribute to 分发给","distribute evenly 平均分配"],xp:[],mu:["\"Distribute these pamphlets, spread the word of revolution\" — Enjolras, Les Misérables"]},
+  {w:"diverse",p:"/daɪˈvɜːs/",pos:"adj.",m:"多样的；不同的",ex:"The university attracts students from diverse cultural backgrounds.",exc:"这所大学吸引了来自不同文化背景的学生。",ph:["diverse range of 各种各样的","culturally diverse 文化多元的"],xp:[],mu:["\"We are diverse, we are many, but we stand as one tonight\" — Ensemble, Rent"]},
+  {w:"domestic",p:"/dəˈmestɪk/",pos:"adj.",m:"国内的；家庭的",ex:"The domestic market accounts for 70% of the company's revenue.",exc:"国内市场占该公司收入的70%。",ph:["domestic violence 家庭暴力","domestic demand 国内需求","GDP (gross domestic product) 国内生产总值"],xp:[],mu:["\"Domestic bliss was never meant for ones such as I\" — The Witch, Into the Woods"]},
+  {w:"dominate",p:"/ˈdɒmɪneɪt/",pos:"v.",m:"统治；主导；占优势",ex:"The tech giant dominates the global smartphone market.",exc:"这家科技巨头主导着全球智能手机市场。",ph:["dominate the market 主导市场","dominate the conversation 主导谈话"],xp:[],mu:["\"I will dominate the stage, I will own every note\" — Carlotta, The Phantom of the Opera"]},
+  {w:"dramatic",p:"/drəˈmætɪk/",pos:"adj.",m:"戏剧性的；巨大的",ex:"There has been a dramatic improvement in air quality in recent years.",exc:"近年来空气质量有了显著改善。",ph:["dramatic change 巨大变化","dramatic effect 显著效果"],xp:[],mu:["\"A dramatic entrance, that is what the people want\" — Velma Kelly, Chicago"]},
+  {w:"elaborate",p:"/ɪˈlæbərət/",pos:"adj./v.",m:"精心制作的；详细阐述",ex:"Could you elaborate on your plan for the coming semester?",exc:"你能详细说明一下下学期的计划吗？",ph:["elaborate on 详细说明","elaborate design 精心设计"],xp:[],mu:["\"No need to elaborate, I understand you perfectly\" — Angelica, Hamilton"]},
+  {w:"eliminate",p:"/ɪˈlɪmɪneɪt/",pos:"v.",m:"消除；淘汰",ex:"The new system will eliminate the need for paper forms entirely.",exc:"新系统将完全消除对纸质表格的需求。",ph:["eliminate poverty 消除贫困","eliminate errors 消除错误"],xp:[],mu:["\"We must eliminate all obstacles in our path to glory\" — Aaron Burr, Hamilton"]},
+  {w:"emerge",p:"/ɪˈmɜːdʒ/",pos:"v.",m:"出现；浮现",ex:"Several new trends emerged in the fashion industry this year.",exc:"今年时尚界出现了几个新趋势。",ph:["emerge from 从……中出现","It emerges that 情况显示"],xp:[],mu:["\"A new dawn will emerge from the darkest of nights\" — Ensemble, Les Misérables"]},
+  {w:"emphasis",p:"/ˈemfəsɪs/",pos:"n.",m:"强调；重点",ex:"The school places great emphasis on character development.",exc:"这所学校非常重视品格培养。",ph:["put emphasis on 强调","lay emphasis on 重视"],xp:[],mu:["\"The emphasis must be on style, on presentation, on flair\" — Billy Flynn, Chicago"]},
+  {w:"enable",p:"/ɪˈneɪbəl/",pos:"v.",m:"使能够；使成为可能",ex:"This scholarship enabled her to pursue her dream of studying abroad.",exc:"这笔奖学金使她得以实现出国留学的梦想。",ph:["enable sb. to do 使某人能做","enable access 允许访问"],xp:[],mu:["\"Will you enable my escape, will you give me wings to fly?\" — Elphaba, Wicked"]},
+  {w:"encounter",p:"/ɪnˈkaʊntər/",pos:"v./n.",m:"遇到；遭遇",ex:"We encountered several unexpected problems during the renovation.",exc:"装修期间我们遇到了几个意想不到的问题。",ph:["encounter difficulties 遇到困难","a chance encounter 偶然相遇"],xp:[],mu:["\"This strange encounter in the catacombs of the opera\" — Christine, The Phantom of the Opera"]},
+  {w:"enhance",p:"/ɪnˈhɑːns/",pos:"v.",m:"增强；提高",ex:"Regular reading can greatly enhance your vocabulary and writing skills.",exc:"经常阅读可以大大提高你的词汇量和写作能力。",ph:["enhance performance 提高表现","enhance efficiency 提高效率"],xp:[],mu:["\"This mask enhances my mystique, do you not agree?\" — The Phantom, The Phantom of the Opera"]},
+  {w:"enormous",p:"/ɪˈnɔːməs/",pos:"adj.",m:"巨大的；庞大的",ex:"The project has enormous potential to change people's lives.",exc:"这个项目具有改变人们生活的巨大潜力。",ph:["enormous amount of 大量的","enormous pressure 巨大的压力"],xp:[],mu:["\"The enormous weight of expectation crushes my very soul\" — Evan Hansen, Dear Evan Hansen"]},
+  {w:"ensure",p:"/ɪnˈʃʊər/",pos:"v.",m:"确保；保证",ex:"Please ensure that all doors are locked before leaving the building.",exc:"请确保离开大楼前所有门都已锁好。",ph:["ensure safety 确保安全","ensure that 确保……"],xp:[],mu:["\"I must ensure that justice is served, that the law prevails\" — Javert, Les Misérables"]},
+  {w:"enthusiasm",p:"/ɪnˈθjuːziæzəm/",pos:"n.",m:"热情；热忱",ex:"Her enthusiasm for teaching inspired many of her students.",exc:"她对教学的热情激励了她的许多学生。",ph:["show enthusiasm for 表现出对……的热情","with enthusiasm 热情地"],xp:["full of enthusiasm 充满热情"],mu:["\"Your enthusiasm is noted, but let the grown-ups speak\" — Aaron Burr, Hamilton"]},
+  {w:"essential",p:"/ɪˈsenʃəl/",pos:"adj./n.",m:"必要的；本质",ex:"Water is essential for all forms of life on Earth.",exc:"水对地球上所有生命形式都至关重要。",ph:["essential to 对……必不可少","the essentials 要点"],xp:[],mu:["\"Love is essential, love is all we truly need\" — Collins, Rent"]},
+  {w:"establish",p:"/ɪˈstæblɪʃ/",pos:"v.",m:"建立；确立",ex:"The company was established in 1998 and now has offices worldwide.",exc:"这家公司成立于1998年，如今在全球设有办事处。",ph:["establish contact 建立联系","establish a reputation 树立声誉"],xp:[],mu:["\"We must establish a new order, a new society\" — Enjolras, Les Misérables"]},
+  {w:"evaluate",p:"/ɪˈvæljueɪt/",pos:"v.",m:"评价；评估",ex:"The committee will evaluate all applications before making a decision.",exc:"委员会将在做出决定前评估所有申请。",ph:["evaluate the performance 评估表现","evaluate the evidence 评估证据"],xp:[],mu:["\"Let me evaluate the risks before I make my move\" — Aaron Burr, Hamilton"]},
+  {w:"evidence",p:"/ˈevɪdəns/",pos:"n.",m:"证据；迹象",ex:"There is no scientific evidence to support this claim.",exc:"没有科学证据支持这一说法。",ph:["in evidence 明显的","give evidence 作证"],xp:[],mu:["\"The evidence is clear, the crime is plain to see\" — Javert, Les Misérables"]},
+  {w:"evolve",p:"/ɪˈvɒlv/",pos:"v.",m:"进化；逐步发展",ex:"The company's business model has evolved significantly over the years.",exc:"多年来公司的商业模式发生了显著演变。",ph:["evolve into 演变成","evolve from 由……进化而来"],xp:[],mu:["\"You must evolve beyond this provincial life, my dear\" — Belle, Beauty and the Beast"]},
+  {w:"exceed",p:"/ɪkˈsiːd/",pos:"v.",m:"超过；超越",ex:"The final cost of the project exceeded our initial estimates by 20%.",exc:"项目最终成本超出我们最初估算的20%。",ph:["exceed expectations 超出预期","exceed the limit 超过限制"],xp:[],mu:["\"Our passion will exceed all boundaries set by man\" — Christine & The Phantom, The Phantom of the Opera"]},
+  {w:"exclude",p:"/ɪksˈkluːd/",pos:"v.",m:"排除；不包括",ex:"The price excludes taxes and delivery charges.",exc:"价格不含税和运费。",ph:["exclude from 把……排除在外","exclude the possibility 排除可能性"],xp:[],mu:["\"Do not exclude me from this world you have created\" — The Phantom, The Phantom of the Opera"]},
+  {w:"exhibit",p:"/ɪɡˈzɪbɪt/",pos:"v./n.",m:"展示；展览；展品",ex:"The artist's work will be exhibited at the national gallery next month.",exc:"该艺术家的作品下月将在国家美术馆展出。",ph:["on exhibit 在展出","exhibit signs of 显示……迹象"],xp:[],mu:["\"I will exhibit my soul upon this stage tonight\" — Grizabella, Cats"]},
+  {w:"exploit",p:"/ɪkˈsplɔɪt/",pos:"v.",m:"开发；利用；剥削",ex:"We should exploit renewable energy sources more effectively.",exc:"我们应该更有效地开发可再生能源。",ph:["exploit resources 开发资源","exploit weaknesses 利用弱点"],xp:[],mu:["\"They exploit the poor, they profit from their pain\" — Enjolras, Les Misérables"]},
+  {w:"external",p:"/ɪkˈstɜːnəl/",pos:"adj.",m:"外部的；外面的",ex:"External factors such as inflation can affect the company's profits.",exc:"通货膨胀等外部因素会影响公司利润。",ph:["external environment 外部环境","external pressure 外部压力"],xp:[],mu:["\"The external world cannot touch what we have here inside\" — The Phantom, The Phantom of the Opera"]},
+  {w:"facilitate",p:"/fəˈsɪlɪteɪt/",pos:"v.",m:"促进；使便利",ex:"The new software is designed to facilitate communication between teams.",exc:"新软件旨在促进团队之间的沟通。",ph:["facilitate the process 促进进程","facilitate understanding 增进理解"],xp:[],mu:["\"I will facilitate your rise to the top, trust in me\" — The Wizard, Wicked"]},
+  {w:"flexible",p:"/ˈfleksɪbəl/",pos:"adj.",m:"灵活的；柔韧的",ex:"The company offers flexible working hours for all employees.",exc:"公司为所有员工提供灵活的工作时间。",ph:["flexible schedule 灵活的时间安排","remain flexible 保持灵活"],xp:[],mu:["\"One must be flexible in this ever-changing world\" — Aaron Burr, Hamilton"]},
+  {w:"foundation",p:"/faʊnˈdeɪʃən/",pos:"n.",m:"基础；基金会",ex:"A solid foundation in mathematics is crucial for studying engineering.",exc:"扎实的数学基础对学习工程学至关重要。",ph:["lay the foundation 奠定基础","foundation course 基础课程"],xp:["on a firm foundation 在坚实的基础上"],mu:["\"The foundation of our nation was built on dreams like yours\" — George Washington, Hamilton"]},
+  {w:"fundamental",p:"/ˌfʌndəˈmentl/",pos:"adj./n.",m:"基本的；根本",ex:"Freedom of speech is a fundamental right in a democratic society.",exc:"言论自由是民主社会的基本权利。",ph:["fundamental change 根本性变化","fundamental principle 基本原则"],xp:[],mu:["\"This is a fundamental truth: love conquers all in the end\" — Fantine, Les Misérables"]},
+  {w:"generate",p:"/ˈdʒenəreɪt/",pos:"v.",m:"产生；引起",ex:"The new factory will generate hundreds of jobs for the local community.",exc:"新工厂将为当地社区创造数百个就业机会。",ph:["generate revenue 创造收入","generate interest 引起兴趣"],xp:[],mu:["\"We generate the power that lights up the entire city\" — Ensemble, Newsies"]},
+  {w:"guarantee",p:"/ˌɡærənˈtiː/",pos:"v./n.",m:"保证；担保",ex:"Hard work doesn't guarantee success, but it certainly helps.",exc:"努力工作不能保证成功，但肯定有帮助。",ph:["guarantee to do 保证做","money-back guarantee 退款保证"],xp:[],mu:["\"I cannot guarantee your safety in this battle\" — George Washington, Hamilton"]},
+  {w:"identify",p:"/aɪˈdentɪfaɪ/",pos:"v.",m:"识别；确认；认同",ex:"The research aims to identify the main causes of the disease.",exc:"这项研究旨在确定该疾病的主要原因。",ph:["identify with 认同","identify the problem 识别问题"],xp:[],mu:["\"I identify with you more than you could ever know\" — Elphaba, Wicked"]},
+  {w:"illustrate",p:"/ˈɪləstreɪt/",pos:"v.",m:"说明；阐明；（用图）展示",ex:"The professor used a simple diagram to illustrate the complex concept.",exc:"教授用一个简单图表来说明这个复杂概念。",ph:["illustrate the point 说明观点","illustrate with examples 用例子说明"],xp:[],mu:["\"Let me illustrate the point with a story of my own\" — Hermes, Hadestown"]},
+  {w:"implement",p:"/ˈɪmplɪment/",pos:"v.",m:"实施；执行",ex:"The government plans to implement the new policy from next January.",exc:"政府计划从明年一月起实施新政策。",ph:["implement a plan 执行计划","implement changes 实施变革"],xp:[],mu:["\"We must implement the plan before the dawn arrives\" — Enjolras, Les Misérables"]},
+  {w:"impose",p:"/ɪmˈpəʊz/",pos:"v.",m:"强加；征税；施加",ex:"The court imposed a heavy fine on the company for pollution.",exc:"法院因污染对该公司处以重罚。",ph:["impose on 强加于","impose taxes 征税","impose restrictions 施加限制"],xp:[],mu:["\"Do not impose your will on those who cannot fight back\" — Jean Valjean, Les Misérables"]},
+  {w:"incline",p:"/ɪnˈklaɪn/",pos:"v./n.",m:"倾向于；倾斜",ex:"I'm inclined to agree with your assessment of the situation.",exc:"我倾向于同意你对形势的判断。",ph:["be inclined to 倾向于","incline towards 偏爱"],xp:[],mu:["\"I am inclined to believe that there is good in every soul\" — Jean Valjean, Les Misérables"]},
+  {w:"incorporate",p:"/ɪnˈkɔːpəreɪt/",pos:"v.",m:"包含；合并；纳入",ex:"The new design incorporates many suggestions from user feedback.",exc:"新设计纳入了用户反馈中的许多建议。",ph:["incorporate into 纳入到","incorporate with 与……合并"],xp:[],mu:["\"We incorporate all styles, all sounds, all voices here\" — Benny, In the Heights"]},
+  {w:"indicate",p:"/ˈɪndɪkeɪt/",pos:"v.",m:"表明；指示",ex:"Recent studies indicate that the treatment is effective in 80% of cases.",exc:"最近的研究表明该治疗方法对80%的病例有效。",ph:["indicate that 表明","as indicated 如所示"],xp:[],mu:["\"Your silence indicates consent, so I shall proceed\" — The Phantom, The Phantom of the Opera"]},
+  {w:"inevitable",p:"/ɪnˈevɪtəbəl/",pos:"adj.",m:"不可避免的",ex:"Change is an inevitable part of life that we must learn to accept.",exc:"变化是生活中不可避免的一部分，我们必须学会接受。",ph:["the inevitable result 必然结果","it is inevitable that ……是不可避免的"],xp:[],mu:["\"Change is inevitable, growth is optional\" — Glinda, Wicked"]},
+  {w:"initiate",p:"/ɪˈnɪʃieɪt/",pos:"v.",m:"开始；发起",ex:"The company initiated a new training program for junior employees.",exc:"公司为初级员工启动了一个新的培训计划。",ph:["initiate a conversation 发起对话","initiate reforms 启动改革"],xp:[],mu:["\"I will initiate the sequence, I will start the show\" — The Phantom, The Phantom of the Opera"]},
+  {w:"innovation",p:"/ˌɪnəˈveɪʃən/",pos:"n.",m:"创新；革新",ex:"Technological innovation is driving rapid changes in the healthcare industry.",exc:"技术创新正在推动医疗行业的快速变革。",ph:["technological innovation 技术创新","encourage innovation 鼓励创新"],xp:[],mu:["\"Innovation is the spark that lights the flame of change\" — Alexander Hamilton, Hamilton"]},
+  {w:"insight",p:"/ˈɪnsaɪt/",pos:"n.",m:"洞察力；深刻见解",ex:"The book offers valuable insights into how successful companies operate.",exc:"这本书提供了对成功公司运作方式的宝贵见解。",ph:["gain insight into 深入了解","provide insight 提供洞察"],xp:[],mu:["\"Give me insight into the workings of your heart\" — Christine, The Phantom of the Opera"]},
+  {w:"integrate",p:"/ˈɪntɪɡreɪt/",pos:"v.",m:"整合；融合",ex:"The school integrates technology into every aspect of its curriculum.",exc:"学校将技术融入课程的每个方面。",ph:["integrate into 融入","integrate with 与……结合"],xp:[],mu:["\"We must integrate our forces if we wish to survive\" — Enjolras, Les Misérables"]},
+  {w:"intellectual",p:"/ˌɪntɪˈlektʃuəl/",pos:"adj./n.",m:"智力的；知识分子",ex:"Reading challenging books stimulates intellectual growth.",exc:"阅读有挑战性的书籍能促进智力成长。",ph:["intellectual property 知识产权","intellectual ability 智力能力"],xp:[],mu:["\"Intellectual pursuits are fine, but what about passion?\" — Angelica, Hamilton"]},
+  {w:"intense",p:"/ɪnˈtens/",pos:"adj.",m:"强烈的；紧张的",ex:"There is intense competition for places at the top universities.",exc:"顶尖大学的入学名额竞争激烈。",ph:["intense pressure 巨大的压力","intense heat 酷热"],xp:[],mu:["\"The intense desire burning deep within my soul\" — The Phantom, The Phantom of the Opera"]},
+  {w:"interpret",p:"/ɪnˈtɜːprɪt/",pos:"v.",m:"解释；口译；理解",ex:"How do you interpret the author's message in this passage?",exc:"你如何理解作者在这段话中的意思？",ph:["interpret as 理解为","interpret data 解读数据"],xp:[],mu:["\"How do you interpret the silence that now fills the room?\" — Mark, Rent"]},
+  {w:"investigate",p:"/ɪnˈvestɪɡeɪt/",pos:"v.",m:"调查；研究",ex:"The police are investigating the cause of the fire.",exc:"警方正在调查火灾原因。",ph:["investigate into 调查","thoroughly investigate 彻底调查"],xp:[],mu:["\"I will investigate this mystery, I will find the truth\" — Raoul, The Phantom of the Opera"]},
+  {w:"involve",p:"/ɪnˈvɒlv/",pos:"v.",m:"涉及；包含；参与",ex:"The project involves a lot of research and data analysis work.",exc:"这个项目涉及大量研究和数据分析工作。",ph:["be involved in 参与","involve doing 需要做"],xp:[],mu:["\"Do not involve yourself in matters you cannot understand\" — The Phantom, The Phantom of the Opera"]},
+  {w:"isolate",p:"/ˈaɪsəleɪt/",pos:"v.",m:"隔离；孤立",ex:"The patients were isolated from the general population to prevent infection.",exc:"病人被与普通人群隔离以防感染。",ph:["isolate from 与……隔离","feel isolated 感到孤立"],xp:[],mu:["\"Do not isolate yourself from those who love you still\" — Angelica, Hamilton"]},
+  {w:"justify",p:"/ˈdʒʌstɪfaɪ/",pos:"v.",m:"证明……正当；为……辩护",ex:"How can you justify spending so much money on a single event?",exc:"你怎么证明在一个活动上花这么多钱是合理的？",ph:["justify oneself 为自己辩护","justify doing 证明做某事是合理的"],xp:[],mu:["\"How can you justify the lives lost on this day?\" — Javert, Les Misérables"]},
+  {w:"launch",p:"/lɔːntʃ/",pos:"v./n.",m:"发射；发起；推出",ex:"The company plans to launch its new product line in September.",exc:"公司计划在九月推出新的产品线。",ph:["launch a campaign 发起活动","product launch 产品发布"],xp:[],mu:["\"We launch our rebellion at the stroke of midnight\" — Enjolras, Les Misérables"]},
+  {w:"legislation",p:"/ˌledʒɪsˈleɪʃən/",pos:"n.",m:"立法；法律",ex:"New legislation requires all companies to report their carbon emissions.",exc:"新立法要求所有公司报告碳排放。",ph:["pass legislation 通过立法","environmental legislation 环境立法"],xp:[],mu:["\"Legislation cannot change the hearts of men, I fear\" — George Washington, Hamilton"]},
+  {w:"liberal",p:"/ˈlɪbərəl/",pos:"adj.",m:"自由主义的；慷慨的；开明的",ex:"She has a liberal attitude towards different lifestyles and cultures.",exc:"她对不同的生活方式和文化持开明态度。",ph:["liberal education 通识教育","liberal democracy 自由民主"],xp:[],mu:["\"A liberal dose of charm will get you anywhere, my dear\" — Billy Flynn, Chicago"]},
+  {w:"likewise",p:"/ˈlaɪkwaɪz/",pos:"adv.",m:"同样地；也",ex:"He donated money to the charity, and likewise encouraged his friends to contribute.",exc:"他向慈善机构捐了款，同样也鼓励朋友们贡献。",ph:["and likewise 同样地","do likewise 照做"],xp:[],mu:["\"I likewise have a dream that I must follow to the end\" — Orpheus, Hadestown"]},
+  {w:"maintain",p:"/meɪnˈteɪn/",pos:"v.",m:"维持；保持；维修",ex:"It's important to maintain a healthy work-life balance.",exc:"保持健康的工作生活平衡很重要。",ph:["maintain contact 保持联系","maintain standards 保持标准"],xp:[],mu:["\"I must maintain control, I must not let them see\" — The Phantom, The Phantom of the Opera"]},
+  {w:"mechanism",p:"/ˈmekənɪzəm/",pos:"n.",m:"机制；原理",ex:"The report explains the mechanism behind climate change in simple terms.",exc:"该报告用简单的语言解释了气候变化背后的机制。",ph:["defense mechanism 防御机制","market mechanism 市场机制"],xp:[],mu:["\"The mechanism of my heart is wound too tight, they say\" — Evan Hansen, Dear Evan Hansen"]},
+  {w:"medium",p:"/ˈmiːdiəm/",pos:"n./adj.",m:"媒介；中等的",ex:"Social media has become an important medium for news distribution.",exc:"社交媒体已成为新闻传播的重要媒介。",ph:["medium-sized 中型的","through the medium of 通过……媒介"],xp:[],mu:["\"I am a medium for the music, a vessel for the song\" — Christine, The Phantom of the Opera"]},
+  {w:"modify",p:"/ˈmɒdɪfaɪ/",pos:"v.",m:"修改；调整；修饰",ex:"The terms of the contract were modified to include the new clause.",exc:"合同条款被修改以包含新条款。",ph:["modify behavior 改变行为","modify accordingly 相应修改"],xp:[],mu:["\"I have to modify my approach to win this game\" — Aaron Burr, Hamilton"]},
+  {w:"monopoly",p:"/məˈnɒpəli/",pos:"n.",m:"垄断；独占",ex:"The company was accused of maintaining a monopoly over the software market.",exc:"这家公司被指控对软件市场维持垄断。",ph:["break the monopoly 打破垄断","state monopoly 国家垄断"],xp:[],mu:["\"You have a monopoly on my heart, there is no room for another\" — Eponine, Les Misérables"]},
+  {w:"negotiate",p:"/nɪˈɡəʊʃieɪt/",pos:"v.",m:"谈判；协商",ex:"The union is negotiating with management for better working conditions.",exc:"工会正在与管理层谈判争取更好的工作条件。",ph:["negotiate with 与……谈判","negotiate a deal 谈判交易"],xp:[],mu:["\"I will negotiate with the devil if it saves my child\" — Fantine, Les Misérables"]},
+  {w:"nevertheless",p:"/ˌnevəðəˈles/",pos:"adv.",m:"然而；不过",ex:"The task was difficult; nevertheless, we managed to complete it on time.",exc:"任务很困难，不过我们还是按时完成了。",ph:[],xp:[],mu:["\"Nevertheless, I persist, I will not be denied\" — Alexander Hamilton, Hamilton"]},
+  {w:"notion",p:"/ˈnəʊʃən/",pos:"n.",m:"概念；观念",ex:"The notion that money brings happiness has been widely debated.",exc:"金钱带来幸福这一观念一直广受争议。",ph:["challenge the notion 挑战观念","popular notion 普遍看法"],xp:[],mu:["\"The notion that I could be loved is foreign to my soul\" — The Phantom, The Phantom of the Opera"]},
+  {w:"objective",p:"/əbˈdʒektɪv/",pos:"n./adj.",m:"目标；客观的",ex:"The main objective of this course is to improve your critical thinking skills.",exc:"本课程的主要目标是提高你的批判性思维能力。",ph:["achieve an objective 实现目标","objective analysis 客观分析"],xp:[],mu:["\"The objective is clear: we must win this war of hearts\" — Enjolras, Les Misérables"]},
+  {w:"oblige",p:"/əˈblaɪdʒ/",pos:"v.",m:"迫使；施恩于",ex:"The law obliges companies to provide safety training for all employees.",exc:"法律要求公司为所有员工提供安全培训。",ph:["be obliged to do 有义务做","much obliged 非常感谢"],xp:[],mu:["\"Much obliged for your assistance in this delicate matter\" — Aaron Burr, Hamilton"]},
+  {w:"obtain",p:"/əbˈteɪn/",pos:"v.",m:"获得；得到",ex:"You can obtain more information by visiting our official website.",exc:"你可以通过访问我们的官方网站获得更多信息。",ph:["obtain permission 获得许可","obtain a degree 获得学位"],xp:[],mu:["\"I must obtain the key to her heart before the night is through\" — Raoul, The Phantom of the Opera"]},
+  {w:"obvious",p:"/ˈɒbviəs/",pos:"adj.",m:"明显的；显然的",ex:"It was obvious from her expression that she was unhappy with the decision.",exc:"从她的表情明显看出她对决定不满意。",ph:["obvious reason 明显的原因","it is obvious that 显然"],xp:[],mu:["\"It is obvious to anyone with eyes that she is the one\" — Marius, Les Misérables"]},
+  {w:"occupy",p:"/ˈɒkjəpaɪ/",pos:"v.",m:"占据；占用；使忙碌",ex:"Reading occupies most of his free time on weekends.",exc:"阅读占据了他周末大部分空闲时间。",ph:["occupy oneself with 忙于","be occupied with 正忙于"],xp:[],mu:["\"Let the music occupy your mind and fill your soul with light\" — The Phantom, The Phantom of the Opera"]},
+  {w:"opponent",p:"/əˈpəʊnənt/",pos:"n.",m:"对手；反对者",ex:"He defeated his opponent in the final round of the debate competition.",exc:"他在辩论赛最后一轮击败了对手。",ph:["political opponent 政敌","a worthy opponent 值得尊敬的对手"],xp:[],mu:["\"I face my opponent not with hatred but with pity\" — Alexander Hamilton, Hamilton"]},
+  {w:"opportunity",p:"/ˌɒpəˈtjuːnəti/",pos:"n.",m:"机会；时机",ex:"Studying abroad provides a great opportunity to experience different cultures.",exc:"出国留学是体验不同文化的绝佳机会。",ph:["seize an opportunity 抓住机会","golden opportunity 黄金机会","equal opportunity 机会均等"],xp:[],mu:["\"This opportunity will not come again, seize it now\" — Aaron Burr, Hamilton"]},
+  {w:"option",p:"/ˈɒpʃən/",pos:"n.",m:"选择；选项",ex:"We have no option but to cancel the event due to the storm.",exc:"由于暴风雨，我们别无选择只能取消活动。",ph:["have no option but to 别无选择只能","keep options open 保留选择余地"],xp:[],mu:["\"I have no option left but to reveal my true face\" — The Phantom, The Phantom of the Opera"]},
+  {w:"orient",p:"/ˈɔːrient/",pos:"v.",m:"使适应；以……为导向",ex:"The course is oriented towards students who want to study abroad.",exc:"这门课程面向想出国留学的学生。",ph:["be oriented to 面向","profit-oriented 以利润为导向"],xp:[],mu:["\"We are oriented towards the light, towards the future bright\" — Ensemble, Rent"]},
+  {w:"overcome",p:"/ˌəʊvəˈkʌm/",pos:"v.",m:"克服；战胜",ex:"She overcame many obstacles to become the first woman in her family to graduate.",exc:"她克服了许多障碍，成为家里第一位毕业的女性。",ph:["overcome difficulties 克服困难","overcome fear 克服恐惧"],xp:[],mu:["\"We shall overcome the darkness with the brightness of our song\" — Ensemble, Les Misérables"]},
+  {w:"participate",p:"/pɑːˈtɪsɪpeɪt/",pos:"v.",m:"参加；参与",ex:"Over 200 students participated in the volunteer program last summer.",exc:"去年夏天超过200名学生参加了志愿者项目。",ph:["participate in 参加","actively participate 积极参与"],xp:[],mu:["\"Will you participate in this rebellion of the heart?\" — Enjolras, Les Misérables"]},
+  {w:"perceive",p:"/pəˈsiːv/",pos:"v.",m:"察觉；认为；理解",ex:"How others perceive you can affect your confidence and behavior.",exc:"别人如何看待你会影响你的自信和行为。",ph:["perceive as 视作","perceive the difference 察觉差异"],xp:[],mu:["\"I perceive a change in you, a softening of the heart\" — Glinda, Wicked"]},
+  {w:"persist",p:"/pəˈsɪst/",pos:"v.",m:"坚持；持续存在",ex:"If symptoms persist for more than three days, consult a doctor.",exc:"如果症状持续超过三天，请咨询医生。",ph:["persist in 坚持","persist with 持续进行"],xp:[],mu:["\"I must persist until the music is perfect, until she is mine\" — The Phantom, The Phantom of the Opera"]},
+  {w:"perspective",p:"/pəˈspektɪv/",pos:"n.",m:"观点；视角",ex:"Travelling helps you see things from a fresh perspective.",exc:"旅行能帮助你从全新视角看待事物。",ph:["from a different perspective 从不同角度","put sth. in perspective 客观看待"],xp:[],mu:["\"From my perspective, the view is clear: we must act now\" — Alexander Hamilton, Hamilton"]},
+  {w:"phenomenon",p:"/fɪˈnɒmɪnən/",pos:"n.",m:"现象；奇观",ex:"Globalization is a complex phenomenon that affects all aspects of life.",exc:"全球化是一个影响生活方方面面的复杂现象。",ph:["natural phenomenon 自然现象","social phenomenon 社会现象"],xp:[],mu:["\"This phenomenon of love defies all explanation\" — Elphaba, Wicked"]},
+  {w:"pose",p:"/pəʊz/",pos:"v./n.",m:"造成；提出；姿势",ex:"Air pollution poses a serious threat to public health in many cities.",exc:"空气污染对许多城市的公共健康构成严重威胁。",ph:["pose a threat 构成威胁","pose a question 提出问题"],xp:[],mu:["\"Stranger, pose no threat to those I hold most dear\" — Jean Valjean, Les Misérables"]},
+  {w:"potential",p:"/pəˈtenʃəl/",pos:"adj./n.",m:"潜在的；潜力",ex:"The young athlete shows great potential for future success.",exc:"这位年轻运动员展现出未来成功的巨大潜力。",ph:["potential risk 潜在风险","realize one's potential 发挥潜能"],xp:[],mu:["\"You have potential that you have yet to realize, my friend\" — George Washington, Hamilton"]},
+  {w:"precaution",p:"/prɪˈkɔːʃən/",pos:"n.",m:"预防措施；防范",ex:"Take precautions such as wearing a helmet when cycling on busy roads.",exc:"在繁忙路段骑车时要采取戴头盔等预防措施。",ph:["take precautions 采取预防措施","as a precaution 作为预防","safety precaution 安全防范"],xp:[],mu:["\"Take every precaution, the night is dark and full of eyes\" — Javert, Les Misérables"]},
+  {w:"preceding",p:"/prɪˈsiːdɪŋ/",pos:"adj.",m:"之前的；前述的",ex:"The preceding chapter provides the necessary background for this discussion.",exc:"前一章为本次讨论提供了必要的背景。",ph:["the preceding year 前一年","in the preceding section 在前一节"],xp:[],mu:["\"In the preceding act, we saw the rise of our young hero\" — Hermes, Hadestown"]},
+  {w:"predict",p:"/prɪˈdɪkt/",pos:"v.",m:"预测；预言",ex:"Experts predict a significant increase in online education over the next decade.",exc:"专家预测未来十年在线教育将显著增长。",ph:["predict the future 预测未来","predict that 预测……"],xp:[],mu:["\"I predict a future where the people rule themselves\" — Enjolras, Les Misérables"]},
+  {w:"prejudice",p:"/ˈpredʒədɪs/",pos:"n./v.",m:"偏见；歧视",ex:"We need to eliminate racial prejudice from our society.",exc:"我们需要从社会中消除种族偏见。",ph:["prejudice against 对……的偏见","without prejudice 无偏见地"],xp:[],mu:["\"Prejudice is the poison that corrupts the well of justice\" — Elphaba, Wicked"]},
+  {w:"prescribe",p:"/prɪˈskraɪb/",pos:"v.",m:"开（药）；规定",ex:"The doctor prescribed antibiotics for the infection.",exc:"医生给感染开了抗生素。",ph:["prescribe medicine 开药","prescribe rules 规定规则"],xp:[],mu:["\"The doctor prescribed a dose of reality for my condition\" — Mark, Rent"]},
+  {w:"preserve",p:"/prɪˈzɜːv/",pos:"v.",m:"保护；保存；保持",ex:"Efforts are being made to preserve the historic buildings in the old town.",exc:"正在努力保护老城区的历史建筑。",ph:["preserve the environment 保护环境","preserve food 保存食物"],xp:[],mu:["\"We must preserve the memory of those who came before\" — Eliza, Hamilton"]},
+  {w:"prevail",p:"/prɪˈveɪl/",pos:"v.",m:"盛行；占优势；获胜",ex:"Justice will prevail in the end, no matter how long it takes.",exc:"无论需要多久，正义终将获胜。",ph:["prevail over 战胜","prevail on sb. to do 劝说某人做"],xp:[],mu:["\"In the end, love will prevail over darkness and despair\" — Fantine, Les Misérables"]},
+  {w:"primitive",p:"/ˈprɪmɪtɪv/",pos:"adj.",m:"原始的；简陋的",ex:"The museum displays tools used by primitive societies thousands of years ago.",exc:"博物馆展出了几千年前原始社会使用的工具。",ph:["primitive society 原始社会","primitive instinct 原始本能"],xp:[],mu:["\"These primitive feelings I cannot control, I cannot tame\" — The Phantom, The Phantom of the Opera"]},
+  {w:"principle",p:"/ˈprɪnsɪpəl/",pos:"n.",m:"原则；原理",ex:"She refused to compromise her principles for financial gain.",exc:"她拒绝为经济利益而妥协自己的原则。",ph:["in principle 原则上","stick to one's principles 坚持原则"],xp:[],mu:["\"I stand on principle, I will not bend, I will not break\" — Javert, Les Misérables"]},
+  {w:"priority",p:"/praɪˈɒrəti/",pos:"n.",m:"优先；重点",ex:"Education should be a top priority for any developing country.",exc:"教育应该是任何发展中国家的头等大事。",ph:["give priority to 优先考虑","top priority 首要任务"],xp:[],mu:["\"Your safety is my priority, above all other things\" — George Washington, Hamilton"]},
+  {w:"procedure",p:"/prəˈsiːdʒər/",pos:"n.",m:"程序；流程",ex:"Please follow the standard procedure when submitting your application.",exc:"提交申请时请遵循标准程序。",ph:["standard procedure 标准程序","emergency procedure 应急程序"],xp:[],mu:["\"Follow the procedure and no one will get hurt, understood?\" — Javert, Les Misérables"]},
+  {w:"profit",p:"/ˈprɒfɪt/",pos:"n./v.",m:"利润；获益",ex:"The company's profits increased by 15% compared to last year.",exc:"与去年相比，公司利润增长了15%。",ph:["make a profit 盈利","profit from 从……中获益","non-profit organization 非营利组织"],xp:[],mu:["\"Those who profit from the suffering of the poor shall fall\" — Enjolras, Les Misérables"]},
+  {w:"prohibit",p:"/prəˈhɪbɪt/",pos:"v.",m:"禁止；阻止",ex:"Smoking is strictly prohibited in all public indoor spaces.",exc:"所有室内公共场所严格禁止吸烟。",ph:["prohibit sb. from doing 禁止某人做","strictly prohibited 严格禁止"],xp:[],mu:["\"I cannot prohibit what the heart so desperately wants\" — Christine, The Phantom of the Opera"]},
+  {w:"promote",p:"/prəˈməʊt/",pos:"v.",m:"促进；推广；晋升",ex:"The new policy aims to promote the use of renewable energy sources.",exc:"新政策旨在促进可再生能源的使用。",ph:["promote cooperation 促进合作","be promoted to 被晋升为"],xp:[],mu:["\"I will promote this cause until my dying breath is spent\" — Enjolras, Les Misérables"]},
+  {w:"proportion",p:"/prəˈpɔːʃən/",pos:"n.",m:"比例；部分",ex:"A large proportion of the students come from overseas.",exc:"很大一部分学生来自海外。",ph:["in proportion to 与……成比例","out of proportion 不成比例"],xp:[],mu:["\"In equal proportion, measure for measure, life demands its price\" — Collins, Rent"]},
+  {w:"prospect",p:"/ˈprɒspekt/",pos:"n.",m:"前景；可能性",ex:"The job offers excellent prospects for career advancement.",exc:"这份工作提供了极好的职业发展前景。",ph:["in prospect 可期待","career prospects 职业前景"],xp:[],mu:["\"The prospect of a future without you chills me to the bone\" — The Phantom, The Phantom of the Opera"]},
+  {w:"pursue",p:"/pəˈsjuː/",pos:"v.",m:"追求；从事",ex:"She decided to pursue a master's degree after working for two years.",exc:"工作两年后她决定攻读硕士学位。",ph:["pursue a career 从事职业","pursue one's dream 追求梦想"],xp:[],mu:["\"I will pursue you to the ends of the earth if I must\" — Javert, Les Misérables"]},
+  {w:"radical",p:"/ˈrædɪkəl/",pos:"adj.",m:"根本的；激进的",ex:"The company needs to make radical changes to survive in the digital age.",exc:"公司需要进行根本性变革才能在数字时代生存。",ph:["radical change 根本改变","radical idea 激进的想法"],xp:[],mu:["\"Radical change is coming, whether you will it or not\" — Enjolras, Les Misérables"]},
+  {w:"random",p:"/ˈrændəm/",pos:"adj.",m:"随机的；任意的",ex:"The survey was conducted among a random sample of 1,000 people.",exc:"该调查是在随机抽样的1000人中进行的。",ph:["at random 随机地","random selection 随机选择"],xp:[],mu:["\"Random acts of kindness are the threads that weave our story\" — Ensemble, Come From Away"]},
+  {w:"rational",p:"/ˈræʃənəl/",pos:"adj.",m:"理性的；合理的",ex:"We need to make a rational decision based on facts, not emotions.",exc:"我们需要基于事实而非情绪做出理性决定。",ph:["rational thinking 理性思考","rational explanation 合理解释"],xp:[],mu:["\"There is no rational explanation for what I feel inside\" — Christine, The Phantom of the Opera"]},
+  {w:"readily",p:"/ˈredɪli/",pos:"adv.",m:"乐意地；容易地",ex:"The information is readily available on the company's public website.",exc:"这些信息在公司的公开网站上很容易获取。",ph:["readily accept 欣然接受","readily admit 坦率承认"],xp:[],mu:["\"I would readily give my life for the one I love\" — Eponine, Les Misérables"]},
+  {w:"reform",p:"/rɪˈfɔːm/",pos:"v./n.",m:"改革；改良",ex:"The government is pushing for reforms in the education system.",exc:"政府正在推动教育体系改革。",ph:["economic reform 经济改革","political reform 政治改革"],xp:[],mu:["\"Reform is not enough, we need a revolution of the soul\" — Enjolras, Les Misérables"]},
+  {w:"regulate",p:"/ˈreɡjəleɪt/",pos:"v.",m:"调节；管理；控制",ex:"The body uses sweat to regulate its internal temperature.",exc:"身体通过出汗来调节内部温度。",ph:["regulate the market 监管市场","regulate behavior 规范行为"],xp:[],mu:["\"How do you regulate a love that refuses to be tamed?\" — Elphaba, Wicked"]},
+  {w:"reinforce",p:"/ˌriːɪnˈfɔːs/",pos:"v.",m:"加强；强化",ex:"This exercise is designed to reinforce what you learned in the previous lesson.",exc:"这个练习旨在巩固你在上一课中学到的内容。",ph:["reinforce the idea 强化观念","reinforce the structure 加固结构"],xp:[],mu:["\"This moment will reinforce everything I have taught you\" — The Phantom, The Phantom of the Opera"]},
+  {w:"release",p:"/rɪˈliːs/",pos:"v./n.",m:"释放；发布；解除",ex:"The band plans to release their new album at the end of this month.",exc:"乐队计划在本月底发布新专辑。",ph:["press release 新闻稿","release from 释放","release date 发布日期"],xp:[],mu:["\"Release me from this prison of longing and despair\" — The Phantom, The Phantom of the Opera"]},
+  {w:"reluctant",p:"/rɪˈlʌktənt/",pos:"adj.",m:"不情愿的；勉强的",ex:"Many people are reluctant to change their long-established habits.",exc:"许多人不愿意改变长期养成的习惯。",ph:["be reluctant to do 不愿做","reluctant agreement 勉强的同意"],xp:[],mu:["\"I am reluctant to leave this place, this home I have made\" — Elphaba, Wicked"]},
+  {w:"render",p:"/ˈrendər/",pos:"v.",m:"使变得；提供；给予",ex:"The accident rendered the car completely useless.",exc:"事故使这辆车彻底报废了。",ph:["render assistance 提供援助","render into 翻译成"],xp:[],mu:["\"This final note will render the audience speechless\" — The Phantom, The Phantom of the Opera"]},
+  {w:"represent",p:"/ˌreprɪˈzent/",pos:"v.",m:"代表；表示；描绘",ex:"Each color on the map represents a different type of terrain.",exc:"地图上的每种颜色代表不同的地形类型。",ph:["represent interests 代表利益","represent a threat 构成威胁"],xp:[],mu:["\"I represent the voice of those who cannot speak aloud\" — Enjolras, Les Misérables"]},
+  {w:"resolve",p:"/rɪˈzɒlv/",pos:"v./n.",m:"解决；决心",ex:"We need to resolve this conflict before it affects team morale.",exc:"我们需要在影响团队士气前解决这个冲突。",ph:["resolve a problem 解决问题","resolve to do 决心做"],xp:[],mu:["\"My resolve is iron, my purpose is clear as day\" — Javert, Les Misérables"]},
+  {w:"resource",p:"/rɪˈzɔːs/",pos:"n.",m:"资源；财力",ex:"The library provides a wealth of resources for academic research.",exc:"图书馆为学术研究提供了丰富的资源。",ph:["human resources 人力资源","natural resources 自然资源","allocate resources 分配资源"],xp:[],mu:["\"We have exhausted every resource, there is nothing left to give\" — Mark, Rent"]},
+  {w:"restore",p:"/rɪˈstɔːr/",pos:"v.",m:"恢复；修复",ex:"The new manager worked hard to restore the company's reputation.",exc:"新经理努力恢复了公司的声誉。",ph:["restore order 恢复秩序","restore confidence 恢复信心"],xp:[],mu:["\"We shall restore the glory of this city, brick by brick\" — Alexander Hamilton, Hamilton"]},
+  {w:"restrict",p:"/rɪˈstrɪkt/",pos:"v.",m:"限制；约束",ex:"The new law restricts the sale of tobacco to people under 18.",exc:"新法律限制向18岁以下人群出售烟草。",ph:["restrict access 限制访问","restrict oneself to 限制自己"],xp:[],mu:["\"Do not restrict my freedom, do not cage my wild heart\" — Elphaba, Wicked"]},
+  {w:"reveal",p:"/rɪˈviːl/",pos:"v.",m:"揭露；揭示；展现",ex:"The investigation revealed serious flaws in the security system.",exc:"调查揭示了安全系统中的严重缺陷。",ph:["reveal the truth 揭露真相","reveal secrets 泄露秘密"],xp:[],mu:["\"Reveal yourself, oh master of this masquerade\" — Christine, The Phantom of the Opera"]},
+  {w:"revenue",p:"/ˈrevənjuː/",pos:"n.",m:"收入；税收",ex:"The company's annual revenue exceeded 10 billion dollars for the first time.",exc:"公司年收入首次超过100亿美元。",ph:["tax revenue 税收","generate revenue 创收"],xp:[],mu:["\"The revenue from tonight will keep us alive one more day\" — Mme Thenardier, Les Misérables"]},
+  {w:"revolution",p:"/ˌrevəˈluːʃən/",pos:"n.",m:"革命；巨变",ex:"The internet has brought about a revolution in the way we communicate.",exc:"互联网给我们沟通方式带来了一场革命。",ph:["industrial revolution 工业革命","technological revolution 技术革命"],xp:[],mu:[]},
+  {w:"rural",p:"/ˈrʊərəl/",pos:"adj.",m:"农村的；乡村的",ex:"Many young people from rural areas move to cities for better job opportunities.",exc:"许多农村年轻人为了更好的工作机会搬到城市。",ph:["rural area 农村地区","rural economy 农村经济"],xp:[],mu:["\"In this rural setting, I find the peace I never knew\" — Maria, The Sound of Music"]},
+  {w:"sacrifice",p:"/ˈsækrɪfaɪs/",pos:"v./n.",m:"牺牲；献祭",ex:"Many parents sacrifice their own comfort for their children's education.",exc:"许多父母为孩子的教育牺牲自己的舒适。",ph:["make sacrifices 做出牺牲","sacrifice for 为……牺牲"],xp:[],mu:["\"The sacrifice we make tonight will echo through the years\" — Enjolras, Les Misérables"]},
+  {w:"scheme",p:"/skiːm/",pos:"n./v.",m:"计划；方案；阴谋",ex:"The government introduced a new scheme to support small businesses.",exc:"政府推出了一项支持小企业的新计划。",ph:["training scheme 培训计划","pension scheme 养老金计划"],xp:[],mu:["\"This little scheme of mine will bring them to their knees\" — Mme Thenardier, Les Misérables"]},
+  {w:"secure",p:"/sɪˈkjʊər/",pos:"adj./v.",m:"安全的；获得；保护",ex:"She worked hard to secure a place at one of the country's top universities.",exc:"她努力争取到了国内一所顶尖大学的名额。",ph:["secure a job 找到工作","feel secure 感到安全"],xp:[],mu:["\"We must secure the borders of our nation, that is my vow\" — George Washington, Hamilton"]},
+  {w:"senior",p:"/ˈsiːniər/",pos:"adj./n.",m:"高级的；年长的；大四学生",ex:"He is a senior manager with over 20 years of experience in the industry.",exc:"他是一位在该行业有20多年经验的高级经理。",ph:["senior citizen 老年人","senior position 高级职位"],xp:[],mu:["\"The senior members of the court will hear your case today\" — Judge Turpin, Sweeney Todd"]},
+  {w:"shift",p:"/ʃɪft/",pos:"v./n.",m:"转移；转变；轮班",ex:"There has been a significant shift in public opinion on this issue.",exc:"公众对这个问题的看法发生了重大转变。",ph:["night shift 夜班","shift from 从……转移","paradigm shift 范式转变"],xp:[],mu:["\"The paradigm is shifting, can you feel it in the air?\" — Aaron Burr, Hamilton"]},
+  {w:"significant",p:"/sɪɡˈnɪfɪkənt/",pos:"adj.",m:"重要的；显著的",ex:"There has been a significant improvement in the patient's condition overnight.",exc:"一夜之间病人的状况有了显著改善。",ph:["significant difference 显著差异","play a significant role 发挥重要作用"],xp:[],mu:["\"A significant donation to the cause, how generous of you\" — Mme Thenardier, Les Misérables"]},
+  {w:"specialize",p:"/ˈspeʃəlaɪz/",pos:"v.",m:"专门从事；专攻",ex:"The law firm specializes in intellectual property cases.",exc:"这家律师事务所专门处理知识产权案件。",ph:["specialize in 专攻","specialized knowledge 专业知识"],xp:[],mu:["\"I specialize in characters who live between the lines\" — Elphaba, Wicked"]},
+  {w:"species",p:"/ˈspiːʃiːz/",pos:"n.",m:"物种；种类",ex:"Many species of birds migrate south during the winter months.",exc:"许多鸟类在冬季迁徙到南方。",ph:["endangered species 濒危物种","the human species 人类"],xp:[],mu:["\"Of all the species on this earth, only humans seek revenge\" — Sweeney Todd, Sweeney Todd"]},
+  {w:"specific",p:"/spɪˈsɪfɪk/",pos:"adj.",m:"具体的；特定的",ex:"Can you give me a specific example to illustrate your point?",exc:"你能给我一个具体的例子来说明你的观点吗？",ph:["specific to 针对","in specific terms 具体地说"],xp:[],mu:["\"I have a specific request: bring him to me by dawn\" — The Phantom, The Phantom of the Opera"]},
+  {w:"stable",p:"/ˈsteɪbəl/",pos:"adj.",m:"稳定的；牢固的",ex:"A stable economy is essential for attracting foreign investment.",exc:"稳定的经济对吸引外资至关重要。",ph:["remain stable 保持稳定","stable relationship 稳定的关系"],xp:[],mu:["\"This stable world you have built could crumble in a day\" — Javert, Les Misérables"]},
+  {w:"statistics",p:"/stəˈtɪstɪks/",pos:"n.",m:"统计学；统计数据",ex:"According to official statistics, the unemployment rate fell to 4.5%.",exc:"根据官方统计数据，失业率降至4.5%。",ph:["official statistics 官方统计","statistics show that 统计数据显示"],xp:[],mu:["\"Statistics show that one in five will not survive the winter\" — Mark, Rent"]},
+  {w:"strategy",p:"/ˈstrætədʒi/",pos:"n.",m:"策略；战略",ex:"The company's marketing strategy focuses on social media influencers.",exc:"公司的营销策略侧重社交媒体意见领袖。",ph:["marketing strategy 营销策略","develop a strategy 制定策略"],xp:[],mu:["\"My strategy is patience, my weapon is the pen\" — Aaron Burr, Hamilton"]},
+  {w:"structure",p:"/ˈstrʌktʃər/",pos:"n./v.",m:"结构；构造；组织",ex:"The essay has a clear structure with an introduction, body, and conclusion.",exc:"这篇文章结构清晰，有引言、正文和结论。",ph:["social structure 社会结构","organizational structure 组织结构"],xp:[],mu:["\"The structure of society is built on the backs of the poor\" — Enjolras, Les Misérables"]},
+  {w:"subsequent",p:"/ˈsʌbsɪkwənt/",pos:"adj.",m:"随后的；后来的",ex:"The first experiment failed, but subsequent attempts were successful.",exc:"第一次实验失败了，但随后的尝试成功了。",ph:["subsequent to 在……之后","subsequent events 后续事件"],xp:[],mu:["\"In subsequent acts, the tragedy unfolds with dreadful grace\" — Hermes, Hadestown"]},
+  {w:"substantial",p:"/səbˈstænʃəl/",pos:"adj.",m:"大量的；实质的",ex:"There is substantial evidence linking smoking to lung cancer.",exc:"有大量证据表明吸烟与肺癌有关。",ph:["a substantial amount 大量","substantial progress 实质性进展"],xp:[],mu:["\"A substantial fortune awaits the one who brings him in\" — Javert, Les Misérables"]},
+  {w:"sufficient",p:"/səˈfɪʃənt/",pos:"adj.",m:"足够的；充分的",ex:"A single example is not sufficient to prove the theory.",exc:"一个例子不足以证明这个理论。",ph:["sufficient for 足够用于","sufficient evidence 充分证据"],xp:[],mu:["\"Is my love not sufficient? Is my devotion not enough?\" — The Phantom, The Phantom of the Opera"]},
+  {w:"superior",p:"/suːˈpɪəriər/",pos:"adj./n.",m:"优越的；上级",ex:"This brand is widely regarded as superior to its competitors in quality.",exc:"这个品牌在质量上被广泛认为优于竞争对手。",ph:["superior to 优于","superior quality 优质"],xp:[],mu:["\"You consider yourself superior to the rest of humankind\" — Javert, Les Misérables"]},
+  {w:"suspect",p:"/səˈspekt/",pos:"v./n./adj.",m:"怀疑；嫌疑犯",ex:"I suspect that the decision was made without proper consultation.",exc:"我怀疑这个决定没有经过适当的商议。",ph:["suspect sb. of 怀疑某人","prime suspect 主要嫌疑人"],xp:[],mu:["\"I suspect there is more to this man than meets the eye\" — Javert, Les Misérables"]},
+  {w:"suspend",p:"/səˈspend/",pos:"v.",m:"暂停；悬挂；使停学",ex:"All flights were suspended due to the severe snowstorm.",exc:"由于严重暴雪，所有航班被暂停。",ph:["suspend operations 暂停运营","be suspended from 被停职/停学"],xp:[],mu:["\"Let us suspend our disbelief and enter the world of dreams\" — The Phantom, The Phantom of the Opera"]},
+  {w:"sustain",p:"/səˈsteɪn/",pos:"v.",m:"维持；支撑；遭受",ex:"The economy cannot sustain such rapid growth indefinitely.",exc:"经济无法无限期维持如此快速的增长。",ph:["sustain life 维持生命","sustain damage 遭受损害","sustainable development 可持续发展"],xp:[],mu:["\"This love will sustain us through the long and bitter years\" — Fantine, Les Misérables"]},
+  {w:"tackle",p:"/ˈtækəl/",pos:"v./n.",m:"处理；应对； tackle",ex:"The government needs to tackle the growing problem of air pollution.",exc:"政府需要应对日益严重的空气污染问题。",ph:["tackle a problem 处理问题","tackle the issue 解决问题"],xp:[],mu:["\"We must tackle the impossible, conquer the unknown\" — Elphaba, Wicked"]},
+  {w:"target",p:"/ˈtɑːɡɪt/",pos:"n./v.",m:"目标；以……为目标",ex:"The campaign targets young people aged between 18 and 25.",exc:"该活动以18至25岁的年轻人为目标。",ph:["meet a target 达到目标","target audience 目标受众"],xp:["on target 有望达到目标"],mu:["\"I have a target on my back, but I will not run away\" — Alexander Hamilton, Hamilton"]},
+  {w:"temporary",p:"/ˈtempərəri/",pos:"adj.",m:"暂时的；临时的",ex:"This is just a temporary solution; we need a permanent fix.",exc:"这只是临时解决方案，我们需要永久性修复。",ph:["temporary measure 临时措施","temporary workers 临时工"],xp:[],mu:["\"This pain is temporary, this sorrow will soon pass\" — Angelica, Hamilton"]},
+  {w:"tendency",p:"/ˈtendənsi/",pos:"n.",m:"趋势；倾向",ex:"There is a growing tendency for people to work from home.",exc:"人们在家工作的趋势越来越明显。",ph:["have a tendency to 有……的倾向","economic tendency 经济趋势"],xp:[],mu:["\"I have a tendency to say exactly what I think\" — Elphaba, Wicked"]},
+  {w:"thorough",p:"/ˈθʌrə/",pos:"adj.",m:"彻底的；全面的",ex:"The police conducted a thorough investigation of the crime scene.",exc:"警方对犯罪现场进行了彻底调查。",ph:["thorough understanding 透彻理解","thorough check 彻底检查"],xp:[],mu:["\"A thorough investigation will reveal the ugly truth\" — Javert, Les Misérables"]},
+  {w:"thrive",p:"/θraɪv/",pos:"v.",m:"兴旺；繁荣；茁壮成长",ex:"Small businesses can thrive even in a competitive market with the right strategy.",exc:"小企业如果有正确策略，即使在竞争激烈的市场中也能兴旺发展。",ph:["thrive on 靠……茁壮成长","thrive in 在……中茁壮成长"],xp:[],mu:["\"We will thrive in the face of adversity, watch us grow\" — Ensemble, Newsies"]},
+  {w:"tolerate",p:"/ˈtɒləreɪt/",pos:"v.",m:"容忍；忍受",ex:"The school does not tolerate bullying in any form.",exc:"学校不容忍任何形式的欺凌。",ph:["tolerate pain 忍受痛苦","cannot tolerate 无法容忍"],xp:[],mu:["\"I cannot tolerate injustice in any shape or form\" — Enjolras, Les Misérables"]},
+  {w:"transform",p:"/trænsˈfɔːm/",pos:"v.",m:"转变；改变",ex:"Digital technology has transformed the way we shop and consume information.",exc:"数字技术改变了我们购物和消费信息的方式。",ph:["transform into 转变为","completely transform 彻底改变"],xp:[],mu:["\"She will transform before your eyes from girl to star\" — Glinda, Wicked"]},
+  {w:"trend",p:"/trend/",pos:"n.",m:"趋势；潮流",ex:"There is a clear trend towards healthier eating habits among young people.",exc:"年轻人中明显出现了向更健康饮食习惯发展的趋势。",ph:["follow a trend 追随潮流","economic trend 经济趋势","set a trend 引领潮流"],xp:[],mu:["\"Follow the trend, they said, and you will find your place\" — Evan Hansen, Dear Evan Hansen"]},
+  {w:"ultimate",p:"/ˈʌltɪmət/",pos:"adj.",m:"最终的；根本的",ex:"The ultimate goal of education is to prepare students for life beyond school.",exc:"教育的最终目标是为学生做好进入社会的准备。",ph:["the ultimate aim 最终目标","ultimate responsibility 最终责任"],xp:[],mu:["\"The ultimate price is paid by those who dare to dream\" — Fantine, Les Misérables"]},
+  {w:"undergo",p:"/ˌʌndəˈɡəʊ/",pos:"v.",m:"经历；遭受",ex:"The building is currently undergoing major renovations.",exc:"该建筑目前正在进行重大翻修。",ph:["undergo surgery 接受手术","undergo changes 经历变化"],xp:[],mu:["\"You must undergo the transformation to reach your true form\" — Glinda, Wicked"]},
+  {w:"undertake",p:"/ˌʌndəˈteɪk/",pos:"v.",m:"承担；从事；承诺",ex:"The research team undertook a comprehensive study of the effects of pollution.",exc:"研究团队对污染的影响进行了全面研究。",ph:["undertake a task 承担任务","undertake to do 承诺做"],xp:[],mu:["\"I undertake this mission knowing I may not return\" — Enjolras, Les Misérables"]},
+  {w:"universal",p:"/ˌjuːnɪˈvɜːsəl/",pos:"adj.",m:"普遍的；全体的",ex:"Access to clean water should be a universal human right.",exc:"获得清洁水应该是一项普遍人权。",ph:["universal agreement 普遍共识","universal healthcare 全民医疗"],xp:[],mu:["\"The universal language of the heart is music, is song\" — The Phantom, The Phantom of the Opera"]},
+  {w:"urban",p:"/ˈɜːbən/",pos:"adj.",m:"城市的；都市的",ex:"Urban areas face challenges such as traffic congestion and housing shortages.",exc:"城市地区面临交通拥堵和住房短缺等挑战。",ph:["urban development 城市发展","urban population 城市人口","urbanization 城市化"],xp:[],mu:["\"In this urban jungle, we make our own paradise\" — Usnavi, In the Heights"]},
+  {w:"utilize",p:"/ˈjuːtɪlaɪz/",pos:"v.",m:"利用；使用",ex:"We should utilize our limited resources more efficiently.",exc:"我们应该更有效地利用有限资源。",ph:["fully utilize 充分利用","utilize for 用于"],xp:[],mu:["\"I will utilize every weapon in my arsenal to win\" — Aaron Burr, Hamilton"]},
+  {w:"valid",p:"/ˈvælɪd/",pos:"adj.",m:"有效的；合理的",ex:"Your passport must be valid for at least six months before traveling abroad.",exc:"出国旅行前你的护照必须至少有六个月有效期。",ph:["valid point 合理的论点","valid reason 正当理由","remain valid 仍然有效"],xp:[],mu:["\"Your point is valid, but the timing is all wrong\" — George Washington, Hamilton"]},
+  {w:"vary",p:"/ˈveəri/",pos:"v.",m:"变化；各不相同",ex:"Prices vary greatly depending on the season and location.",exc:"价格因季节和地点不同而有很大差异。",ph:["vary from 不同于","vary greatly 变化很大","vary according to 根据……而变化"],xp:[],mu:["\"The colors of my world vary with each passing day\" — Elphaba, Wicked"]},
+  {w:"version",p:"/ˈvɜːʃən/",pos:"n.",m:"版本；说法",ex:"Could you give us your version of what happened that day?",exc:"你能告诉我们你对那天发生的事的说法吗？",ph:["latest version 最新版本","original version 原始版本"],xp:[],mu:["\"This is my version of events, take it or leave it\" — Aaron Burr, Hamilton"]},
+  {w:"victim",p:"/ˈvɪktɪm/",pos:"n.",m:"受害者；牺牲品",ex:"The charity provides shelter and support for victims of domestic violence.",exc:"该慈善机构为家庭暴力受害者提供庇护和支持。",ph:["fall victim to 成为……的受害者","earthquake victims 地震灾民"],xp:[],mu:["\"I am a victim of my own design, my own creation\" — The Phantom, The Phantom of the Opera"]},
+  {w:"visible",p:"/ˈvɪzɪbəl/",pos:"adj.",m:"可见的；明显的",ex:"The effects of climate change are becoming increasingly visible around the world.",exc:"气候变化的影响在世界各地变得越来越明显。",ph:["clearly visible 清晰可见","visible signs 明显的迹象"],xp:[],mu:["\"Are you visible only to me, this angel in the dark?\" — Christine, The Phantom of the Opera"]},
+  {w:"vision",p:"/ˈvɪʒən/",pos:"n.",m:"视力；愿景；远见",ex:"The CEO has a clear vision for the company's future development.",exc:"CEO对公司未来发展有清晰的愿景。",ph:["field of vision 视野","have vision 有远见","a man of vision 有远见的人"],xp:[],mu:["\"I have a vision of a world where all are truly free\" — Enjolras, Les Misérables"]},
+  {w:"volume",p:"/ˈvɒljuːm/",pos:"n.",m:"卷；册；量；音量",ex:"Can you turn down the volume? I'm trying to study.",exc:"你能把音量调低吗？我在学习。",ph:["volume of trade 贸易量","speak volumes 充分说明"],xp:[],mu:["\"Turn up the volume of the song that is inside your heart\" — Benny, In the Heights"]},
+  {w:"welfare",p:"/ˈwelfeər/",pos:"n.",m:"福利；幸福；福祉",ex:"The government should prioritize the welfare of its citizens above all else.",exc:"政府应将公民福祉置于一切之上。",ph:["social welfare 社会福利","welfare system 福利制度","animal welfare 动物福利"],xp:[],mu:["\"The welfare of the people is my only true concern\" — Jean Valjean, Les Misérables"]},
+  {w:"widespread",p:"/ˈwaɪdspred/",pos:"adj.",m:"广泛的；普遍的",ex:"There is widespread concern about the impact of plastic pollution on oceans.",exc:"人们对塑料污染对海洋的影响普遍担忧。",ph:["widespread use 广泛使用","widespread support 广泛支持"],xp:[],mu:["\"Widespread panic follows wherever this creature goes\" — The Phantom, The Phantom of the Opera"]},
+  {w:"withdraw",p:"/wɪðˈdrɔː/",pos:"v.",m:"撤回；退出；取款",ex:"The company decided to withdraw the product from the market after safety concerns.",exc:"出于安全考虑，公司决定将该产品从市场撤回。",ph:["withdraw from 退出","withdraw money 取钱","withdraw troops 撤军"],xp:[],mu:["\"I will withdraw into the shadows, I will not be seen again\" — The Phantom, The Phantom of the Opera"]},
+  {w:"witness",p:"/ˈwɪtnəs/",pos:"n./v.",m:"目击者；见证",ex:"We are witnessing the rapid transformation of the global economy.",exc:"我们正在见证全球经济的快速转型。",ph:["witness to 为……作证","expert witness 专家证人","bear witness 作证"],xp:[],mu:["\"You are witness to a miracle unfolding before your eyes\" — Glinda, Wicked"]},
+  {w:"yield",p:"/jiːld/",pos:"v./n.",m:"产出；屈服；让路",ex:"The negotiations yielded a historic agreement between the two nations.",exc:"谈判产生了两国间的历史性协议。",ph:["yield to 屈服于","high yield 高产量","yield results 产生结果"],xp:[],mu:["\"I will not yield to the demands of tyranny and hate\" — Enjolras, Les Misérables"]}
+];
+
+// ============ APP STATE ============
+const STORAGE_KEY = 'kaoyan_vocab_state';
+let state = {
+  dailyCount: 50,
+  todayDate: '',
+  wordPool: [],
+  currentStudyIdx: 0,
+  phase: 'settings', // home | study | quiz-cn | quiz-en | results
+  sessionActive: false, // true when study/quiz is in progress
+  lastPhase: 'home', // remembers phase before going home
+  quizCN: { current: 0, answers: [] },
+  quizEN: { current: 0, answers: [] },
+  history: {}, // { '2026-05-25': { count: 30, mastered: 22 } }
+  mistakeBank: {}, // { '2026-05-25': [{w,p,pos,m,...}, ...] }
+  dailyWords: {}, // { '2026-05-25': [{word objects}], ... }
+  dailyAnswers: {} // { '2026-05-25': { cnAnswers: [...], enAnswers: [...] } }
+};
+
+function getToday() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getYesterday() {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return d.toISOString().slice(0, 10);
+}
+
+function pickDailyWords() {
+  const today = getToday();
+  const yesterday = getYesterday();
+
+  // Start with yesterday's mistakes
+  const yesterdayMistakes = state.mistakeBank[yesterday] || [];
+  // Clean up old mistake entries (keep only last 7 days)
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - 7);
+  for (const date of Object.keys(state.mistakeBank)) {
+    if (date < cutoff.toISOString().slice(0, 10)) delete state.mistakeBank[date];
+  }
+
+  // Get new words from bank, excluding yesterday's mistakes
+  const mistakeWords = new Set(yesterdayMistakes.map(w => w.w));
+  const available = WORD_BANK.filter(w => !mistakeWords.has(w.w));
+
+  let seed = 0;
+  for (let i = 0; i < today.length; i++) seed = ((seed << 5) - seed) + today.charCodeAt(i);
+  const pool = [...available];
+  for (let i = pool.length - 1; i > 0; i--) {
+    seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+    const j = seed % (i + 1);
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+
+  const newWords = pool.slice(0, state.dailyCount);
+  // Mistakes first, then new words
+  return [...yesterdayMistakes, ...newWords];
+}
+
+// ============ RENDER ============
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  state.phase = name;
+}
+
+// Settings
+function renderSettings() {
+  showView('settings');
+  document.querySelectorAll('.count-btn').forEach(btn => {
+    btn.classList.toggle('selected', parseInt(btn.dataset.count) === state.dailyCount);
+  });
+  const statsRow = document.getElementById('stats-row');
+  const days = Object.keys(state.history).length;
+  const mastered = Object.values(state.history).reduce((sum, h) => sum + (h.mastered || 0), 0);
+  if (days > 0) {
+    statsRow.style.display = 'flex';
+    document.getElementById('stat-days').textContent = days;
+    document.getElementById('stat-mastered').textContent = mastered;
+  }
+}
+
+// Study
+function renderStudy() {
+  showView('study');
+  const w = state.wordPool[state.currentStudyIdx];
+  const total = state.wordPool.length;
+  document.getElementById('study-progress-text').textContent = `${state.currentStudyIdx + 1}/${total}`;
+  document.getElementById('study-progress').style.width = ((state.currentStudyIdx + 1) / total * 100) + '%';
+
+  const phrases = (w.ph || []).map(p => `<div class="phrase-item">${p}</div>`).join('');
+  const exprs = (w.xp || []).map(x => `<div class="expr-item">${x}</div>`).join('');
+  const musicals = (w.mu || []).map(m => `<div class="mu-item">${m}</div>`).join('');
+
+  document.getElementById('study-card').innerHTML = `
+    <div class="word-en">${w.w}</div>
+    <div class="phonetic">${w.p} <span class="pos-tag">${w.pos}</span></div>
+    <div class="meaning-main">${w.m}</div>
+    <div class="detail-section">
+      <div class="detail-label">例句</div>
+      <div class="example-en">${w.ex}</div>
+      <div class="example-cn">${w.exc}</div>
+      ${phrases ? `<div class="detail-label">相关词组</div>${phrases}` : ''}
+      ${exprs ? `<div class="detail-label">地道表达</div>${exprs}` : ''}
+      ${musicals ? `<div class="detail-label">音乐剧引用</div>${musicals}` : ''}
+    </div>
+  `;
+}
+
+// Quiz CN
+function renderQuizCN() {
+  // Sync index with actual answers count (robust against any edge case)
+  state.quizCN.current = state.quizCN.answers.length;
+  // If all questions answered, move on to EN quiz
+  if (state.quizCN.current >= state.wordPool.length) { startQuizEN(); return; }
+  showView('quiz-cn');
+  const idx = state.quizCN.current;
+  const total = state.wordPool.length;
+  document.getElementById('quiz-cn-progress-text').textContent = `${idx + 1}/${total}`;
+  document.getElementById('quiz-cn-progress').style.width = ((idx + 1) / total * 100) + '%';
+
+  const w = state.wordPool[idx];
+  const isLast = idx >= total - 1;
+  document.getElementById('quiz-cn-card').innerHTML = `
+    <div class="quiz-prompt">${w.w}</div>
+    <div class="quiz-hint">${w.p} · ${w.pos}</div>
+    <input type="text" class="quiz-input" id="quiz-cn-input" placeholder="输入中文意思……" autocomplete="off">
+    <div class="quiz-feedback" id="quiz-cn-feedback"></div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:16px">
+      <button class="quiz-submit" id="quiz-cn-submit">确认</button>
+      <button class="nav-btn" id="quiz-cn-skip" style="color:var(--wrong);border-color:var(--wrong)">跳过</button>
+    </div>
+  `;
+
+  const input = document.getElementById('quiz-cn-input');
+  const submit = document.getElementById('quiz-cn-submit');
+  const skipBtn = document.getElementById('quiz-cn-skip');
+  const feedback = document.getElementById('quiz-cn-feedback');
+  let answered = false;
+
+  function goNext() {
+    if (isLast) { startQuizEN(); } else { renderQuizCN(); }
+  }
+
+  function handleSubmit() {
+    if (answered) return;
+    answered = true;
+    const userAnswer = input.value.trim();
+    const correct = fuzzyMatchCN(userAnswer, w.m);
+    state.quizCN.answers.push({ word: w, userAnswer, correct });
+    state.quizCN.current++; // Immediately advance so progress survives back-to-home
+    input.classList.add(correct ? 'correct' : 'wrong');
+    feedback.className = 'quiz-feedback ' + (correct ? 'correct' : 'wrong');
+    feedback.textContent = correct ? '✓ 正确！按 Enter 继续' : `✗ 正确答案：${w.m} 按 Enter 继续`;
+    submit.textContent = isLast ? '完成' : '下一题 →';
+    submit.disabled = true;
+    skipBtn.style.display = 'none';
+
+    submit.onclick = goNext;
+    submit.disabled = false;
+    input.addEventListener('keydown', function advance(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        input.removeEventListener('keydown', advance);
+        goNext();
+      }
+    });
+    setTimeout(() => { submit.focus(); }, 50);
+  }
+
+  function handleSkip() {
+    if (answered) return;
+    answered = true;
+    state.quizCN.answers.push({ word: w, userAnswer: '(跳过)', correct: false });
+    state.quizCN.current++; // Immediately advance so progress survives back-to-home
+    input.classList.add('wrong');
+    feedback.className = 'quiz-feedback wrong';
+    feedback.textContent = `✗ 正确答案：${w.m} 按 Enter 继续`;
+    submit.textContent = isLast ? '完成' : '下一题 →';
+    submit.disabled = true;
+    skipBtn.style.display = 'none';
+
+    submit.onclick = goNext;
+    submit.disabled = false;
+    input.addEventListener('keydown', function advance(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        input.removeEventListener('keydown', advance);
+        goNext();
+      }
+    });
+    setTimeout(() => { submit.focus(); }, 50);
+  }
+
+  submit.onclick = handleSubmit;
+  skipBtn.onclick = handleSkip;
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') handleSubmit(); });
+  setTimeout(() => input.focus(), 100);
+}
+
+// Quiz EN
+function renderQuizEN() {
+  // Sync index with actual answers count (robust against any edge case)
+  state.quizEN.current = state.quizEN.answers.length;
+  // If all questions answered, show results
+  if (state.quizEN.current >= state.wordPool.length) { showResults(); return; }
+  showView('quiz-en');
+  const idx = state.quizEN.current;
+  const total = state.wordPool.length;
+  document.getElementById('quiz-en-progress-text').textContent = `${idx + 1}/${total}`;
+  document.getElementById('quiz-en-progress').style.width = ((idx + 1) / total * 100) + '%';
+
+  const w = state.wordPool[idx];
+  const isLast = idx >= total - 1;
+  document.getElementById('quiz-en-card').innerHTML = `
+    <div class="quiz-prompt">${w.m}</div>
+    <div class="quiz-hint">${w.pos}</div>
+    <input type="text" class="quiz-input" id="quiz-en-input" placeholder="输入英文单词……" autocomplete="off">
+    <div class="quiz-feedback" id="quiz-en-feedback"></div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:16px">
+      <button class="quiz-submit" id="quiz-en-submit">确认</button>
+      <button class="nav-btn" id="quiz-en-skip" style="color:var(--wrong);border-color:var(--wrong)">跳过</button>
+    </div>
+  `;
+
+  const input = document.getElementById('quiz-en-input');
+  const submit = document.getElementById('quiz-en-submit');
+  const skipBtn = document.getElementById('quiz-en-skip');
+  const feedback = document.getElementById('quiz-en-feedback');
+  let answered = false;
+
+  function goNext() {
+    if (isLast) { showResults(); } else { renderQuizEN(); }
+  }
+
+  function handleSubmit() {
+    if (answered) return;
+    answered = true;
+    const userAnswer = input.value.trim().toLowerCase();
+    const correct = userAnswer === w.w.toLowerCase();
+    state.quizEN.answers.push({ word: w, userAnswer, correct });
+    state.quizEN.current++; // Immediately advance so progress survives back-to-home
+    input.classList.add(correct ? 'correct' : 'wrong');
+    feedback.className = 'quiz-feedback ' + (correct ? 'correct' : 'wrong');
+    feedback.textContent = correct ? '✓ 正确！按 Enter 继续' : `✗ 正确答案：${w.w} 按 Enter 继续`;
+    submit.textContent = isLast ? '查看结果' : '下一题 →';
+    submit.disabled = true;
+    skipBtn.style.display = 'none';
+
+    submit.onclick = goNext;
+    submit.disabled = false;
+    input.addEventListener('keydown', function advance(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        input.removeEventListener('keydown', advance);
+        goNext();
+      }
+    });
+    setTimeout(() => { submit.focus(); }, 50);
+  }
+
+  function handleSkip() {
+    if (answered) return;
+    answered = true;
+    state.quizEN.answers.push({ word: w, userAnswer: '(跳过)', correct: false });
+    state.quizEN.current++; // Immediately advance so progress survives back-to-home
+    input.classList.add('wrong');
+    feedback.className = 'quiz-feedback wrong';
+    feedback.textContent = `✗ 正确答案：${w.w} 按 Enter 继续`;
+    submit.textContent = isLast ? '查看结果' : '下一题 →';
+    submit.disabled = true;
+    skipBtn.style.display = 'none';
+
+    submit.onclick = goNext;
+    submit.disabled = false;
+    input.addEventListener('keydown', function advance(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        input.removeEventListener('keydown', advance);
+        goNext();
+      }
+    });
+    setTimeout(() => { submit.focus(); }, 50);
+  }
+
+  submit.onclick = handleSubmit;
+  skipBtn.onclick = handleSkip;
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') handleSubmit(); });
+  setTimeout(() => input.focus(), 100);
+}
+
+// Results
+function showResults() {
+  state.sessionActive = false;
+  showView('results');
+  const total = state.wordPool.length;
+  const cnCorrect = state.quizCN.answers.filter(a => a.correct).length;
+  const enCorrect = state.quizEN.answers.filter(a => a.correct).length;
+  const overall = Math.round((cnCorrect + enCorrect) / (total * 2) * 100);
+
+  // Collect all wrong words (failed either CN or EN test)
+  const wrongWordSet = new Set();
+  state.quizCN.answers.filter(a => !a.correct).forEach(a => wrongWordSet.add(a.word));
+  state.quizEN.answers.filter(a => !a.correct).forEach(a => wrongWordSet.add(a.word));
+  const wrongWords = [...wrongWordSet];
+
+  const allPassed = state.wordPool.filter(w =>
+    state.quizCN.answers.find(a => a.word.w === w.w)?.correct &&
+    state.quizEN.answers.find(a => a.word.w === w.w)?.correct
+  );
+
+  // Save mistakes to mistakeBank for next day
+  const today = getToday();
+  if (wrongWords.length > 0) {
+    state.mistakeBank[today] = wrongWords;
+  } else {
+    // Clear today's mistakes if all correct
+    delete state.mistakeBank[today];
+  }
+
+  // Save detailed answers for calendar review
+  state.dailyAnswers[today] = {
+    cnAnswers: state.quizCN.answers.map(a => ({ w: a.word.w, user: a.userAnswer, correct: a.correct })),
+    enAnswers: state.quizEN.answers.map(a => ({ w: a.word.w, user: a.userAnswer, correct: a.correct }))
+  };
+  // Save to history
+  if (!state.history[today]) state.history[today] = { count: 0, mastered: 0 };
+  state.history[today].count = total;
+  state.history[today].mastered = allPassed.length;
+  saveState();
+
+  // Build review HTML from wrong answers
+  const cnWrongMap = new Map();
+  state.quizCN.answers.filter(a => !a.correct).forEach(a => cnWrongMap.set(a.word.w, a.userAnswer));
+  const enWrongMap = new Map();
+  state.quizEN.answers.filter(a => !a.correct).forEach(a => enWrongMap.set(a.word.w, a.userAnswer));
+
+  let reviewHTML = '';
+  if (wrongWords.length > 0) {
+    reviewHTML = '<div class="detail-label" style="text-align:left;margin-top:24px">需要复习的单词（共' + wrongWords.length + '个）</div><div class="review-list">';
+    wrongWords.forEach(w => {
+      const cnUser = cnWrongMap.get(w.w);
+      const enUser = enWrongMap.get(w.w);
+      reviewHTML += `
+        <div class="review-item">
+          <div class="rw-word">${w.w} <small>${w.p}</small></div>
+          <div class="rw-meaning">${w.m} · ${w.pos}</div>
+          ${cnUser ? `<div class="rw-yours">你的中文：<span class="wrong">${cnUser}</span> → <span class="right">${w.m}</span></div>` : ''}
+          ${enUser ? `<div class="rw-yours">你的英文：<span class="wrong">${enUser}</span> → <span class="right">${w.w}</span></div>` : ''}
+        </div>
+      `;
+    });
+    reviewHTML += '</div>';
+  }
+
+  let message = '';
+  if (overall >= 90) message = '太棒了！你已经基本掌握了这些单词！';
+  else if (overall >= 70) message = '不错！再复习一下薄弱单词就能完全掌握。';
+  else if (overall >= 50) message = '继续加油，多复习几遍效果更好。';
+  else message = '别灰心，每天坚持背诵一定会有进步！';
+
+  const hasMistakes = wrongWords.length > 0;
+
+  document.getElementById('results-card').innerHTML = `
+    <div class="results-score">${overall}%</div>
+    <div class="results-detail">${message}</div>
+    <div class="stats-row" style="margin-bottom:24px">
+      <div class="stat-item">英→中 <strong>${cnCorrect}/${total}</strong></div>
+      <div class="stat-item">中→英 <strong>${enCorrect}/${total}</strong></div>
+    </div>
+    ${reviewHTML}
+    <div style="margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      ${hasMistakes ? '<button class="nav-btn primary" onclick="reviewMistakes()">复习错题 (' + wrongWords.length + '词)</button>' : ''}
+      <button class="nav-btn" onclick="addMoreWords()">加量学习 (+${state.dailyCount}词)</button>
+      <button class="nav-btn" onclick="restart()">再来一组</button>
+      <button class="nav-btn" onclick="renderHome()">返回首页</button>
+    </div>
+  `;
+}
+
+// ============ FUZZY CN MATCHING ============
+function fuzzyMatchCN(userInput, correctMeaning) {
+  if (!userInput) return false;
+  // Extract Chinese characters
+  const correctChars = correctMeaning.replace(/[^一-龥]/g, '');
+  const userChars = userInput.replace(/[^一-龥]/g, '');
+  if (!userChars) return false;
+
+  // Split correct meaning by common separators
+  const segments = correctMeaning.split(/[；;,，、\s]+/).filter(Boolean);
+  // Check if user input matches any segment well
+  for (const seg of segments) {
+    const segChars = seg.replace(/[^一-龥]/g, '');
+    if (!segChars) continue;
+    let matchedChars = 0;
+    for (const ch of segChars) {
+      if (userChars.includes(ch)) matchedChars++;
+    }
+    if (matchedChars / segChars.length >= 0.5) return true;
+  }
+
+  // Overall character match
+  let totalMatched = 0;
+  for (const ch of correctChars) {
+    if (userChars.includes(ch)) totalMatched++;
+  }
+  return totalMatched / correctChars.length >= 0.5;
+}
+
+// ============ ACTIONS ============
+function startStudy() {
+  state.wordPool = pickDailyWords();
+  state.currentStudyIdx = 0;
+  state.quizCN = { current: 0, answers: [] };
+  state.quizEN = { current: 0, answers: [] };
+  state.todayDate = getToday();
+  // Save the word list for this day
+  state.dailyWords[state.todayDate] = [...state.wordPool];
+  state.sessionActive = true;
+  saveState();
+  renderStudy();
+}
+
+function startQuizCN() {
+  state.quizCN = { current: 0, answers: [] };
+  renderQuizCN();
+}
+
+function startQuizEN() {
+  state.quizEN = { current: 0, answers: [] };
+  renderQuizEN();
+}
+
+function goHome() {
+  state.lastPhase = state.phase; // Remember where we were before renderHome overwrites phase
+  saveState(); // Persist quiz answers to localStorage
+  renderHome();
+}
+
+function resumeStudy() {
+  const phase = state.lastPhase || state.phase;
+  if (phase === 'study') {
+    renderStudy();
+  } else if (phase === 'quiz-cn') {
+    renderQuizCN();
+  } else if (phase === 'quiz-en') {
+    renderQuizEN();
+  } else {
+    renderStudy();
+  }
+}
+
+function restart() {
+  state.wordPool = pickDailyWords();
+  state.currentStudyIdx = 0;
+  state.quizCN = { current: 0, answers: [] };
+  state.quizEN = { current: 0, answers: [] };
+  state.todayDate = getToday();
+  state.dailyWords[state.todayDate] = [...state.wordPool];
+  saveState();
+  renderStudy();
+}
+
+function reviewMistakes() {
+  const today = getToday();
+  const mistakes = state.mistakeBank[today] || [];
+  if (mistakes.length === 0) {
+    alert('没有需要复习的错题，太棒了！');
+    return;
+  }
+  state.wordPool = mistakes;
+  state.currentStudyIdx = 0;
+  state.quizCN = { current: 0, answers: [] };
+  state.quizEN = { current: 0, answers: [] };
+  state.todayDate = today;
+  state.dailyWords[today] = [...mistakes];
+  // Clear today's mistakes so they won't be double-counted tomorrow
+  delete state.mistakeBank[today];
+  saveState();
+  renderStudy();
+}
+
+function addMoreWords() {
+  const today = getToday();
+  // Get words already in the pool
+  const usedWords = new Set(state.wordPool.map(w => w.w));
+  // Also exclude today's mistake bank words (they'll be used for review)
+  const mistakeWords = new Set((state.mistakeBank[today] || []).map(w => w.w));
+  const allUsed = new Set([...usedWords, ...mistakeWords]);
+  const available = WORD_BANK.filter(w => !allUsed.has(w.w));
+  const shuffled = shuffle(available);
+  const extra = shuffled.slice(0, state.dailyCount);
+  state.wordPool = [...state.wordPool, ...extra];
+  state.dailyWords[today] = [...state.wordPool];
+  state.quizCN = { current: 0, answers: [] };
+  state.quizEN = { current: 0, answers: [] };
+  state.currentStudyIdx = 0;
+  saveState();
+  renderStudy();
+}
+
+// ============ HOME & CALENDAR ============
+function renderHome() {
+  showView('home');
+  const today = getToday();
+
+  // Highlight saved count
+  document.querySelectorAll('#home-count-options .count-btn').forEach(btn => {
+    btn.classList.toggle('selected', parseInt(btn.dataset.count) === state.dailyCount);
+  });
+
+  // Stats
+  const totalDays = Object.keys(state.history).length;
+  const totalMastered = Object.values(state.history).reduce((s, h) => s + (h.mastered || 0), 0);
+  const totalDone = Object.values(state.history).reduce((s, h) => s + (h.count || 0), 0);
+
+  // Estimate completion date
+  const remainingWords = WORD_BANK.length - totalDone;
+  const daysNeeded = Math.ceil(remainingWords / state.dailyCount);
+  let completeDate = new Date();
+  let added = 0;
+  while (added < daysNeeded) {
+    completeDate.setDate(completeDate.getDate() + 1);
+    if (completeDate.getDay() !== 0 && completeDate.getDay() !== 6) added++; // skip weekends? No, count all days
+  }
+  // Simplify: just add days
+  completeDate = new Date();
+  completeDate.setDate(completeDate.getDate() + daysNeeded);
+  const completeStr = `${completeDate.getFullYear()}年${completeDate.getMonth() + 1}月${completeDate.getDate()}日`;
+
+  // Count today's mistakes
+  const todayMistakes = (state.mistakeBank[today] || []).length;
+
+  document.getElementById('home-stats').innerHTML = `
+    <div class="home-stat"><div class="val">${totalDays}</div><div class="lbl">坚持天数</div></div>
+    <div class="home-stat"><div class="val">${totalMastered}</div><div class="lbl">已掌握词</div></div>
+    <div class="home-stat"><div class="val">${totalDone}</div><div class="lbl">已学词</div></div>
+    <div class="home-stat"><div class="val">${todayMistakes}</div><div class="lbl">今日错题</div></div>
+    <div class="home-stat"><div class="val">${completeStr}</div><div class="lbl">预计完成</div></div>
+  `;
+
+  // Calendar
+  renderCalendar();
+
+  // Update start button based on session state
+  const startBtn = document.getElementById('btn-start-home');
+  if (startBtn) {
+    if (state.sessionActive) {
+      startBtn.textContent = '继续学习';
+      startBtn.onclick = resumeStudy;
+    } else {
+      startBtn.textContent = '开始学习';
+      startBtn.onclick = startStudy;
+    }
+  }
+}
+
+function renderCalendar() {
+  const today = getToday();
+  const todayDate = new Date();
+  const endMonth = 10; // November (0-indexed)
+  const endYear = 2026;
+
+  let html = '';
+
+  // Months from current month to November 2026
+  for (let y = 2026; y <= endYear; y++) {
+    const startM = (y === 2026 && todayDate.getFullYear() === 2026) ? todayDate.getMonth() : 0;
+    const endM = (y === endYear) ? endMonth : 11;
+    for (let m = startM; m <= endM; m++) {
+      html += renderMonth(y, m, today);
+    }
+  }
+
+  document.getElementById('calendar-wrap').innerHTML = html;
+
+  // Attach click handlers to days with data
+  document.querySelectorAll('.cal-day.has-data').forEach(el => {
+    el.addEventListener('click', () => openDay(el.dataset.date));
+  });
+}
+
+function renderMonth(year, month, today) {
+  const months = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstDay = new Date(year, month, 1).getDay(); // 0=Sun
+
+  let html = `<div class="cal-month-label">${year}年${months[month]}</div>`;
+  html += '<div class="cal-grid">';
+
+  // Day headers
+  const headers = ['日','一','二','三','四','五','六'];
+  headers.forEach(h => { html += `<div class="cal-day-hdr">${h}</div>`; });
+
+  // Empty cells before first day
+  for (let i = 0; i < firstDay; i++) {
+    html += '<div class="cal-day empty"></div>';
+  }
+
+  // Days
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    const isToday = dateStr === today;
+    const hasData = state.dailyWords[dateStr] && state.dailyWords[dateStr].length > 0;
+    const hasMistakes = state.mistakeBank[dateStr] && state.mistakeBank[dateStr].length > 0;
+    let cls = 'cal-day';
+    if (hasData) cls += ' has-data';
+    if (isToday) cls += ' today';
+    if (!hasData && !isToday && new Date(dateStr) > new Date()) cls += ' empty';
+
+    html += `<div class="${cls}" data-date="${dateStr}" ${!hasData ? '' : ''}>
+      ${d}${hasMistakes ? '<span class="err-dot"></span>' : ''}
+    </div>`;
+  }
+
+  html += '</div>';
+  return html;
+}
+
+let currentDayView = '';
+
+function openDay(dateStr) {
+  currentDayView = dateStr;
+  const words = state.dailyWords[dateStr] || [];
+  const answers = state.dailyAnswers[dateStr] || { cnAnswers: [], enAnswers: [] };
+  const hist = state.history[dateStr];
+
+  // Build lookup maps
+  const cnMap = new Map();
+  (answers.cnAnswers || []).forEach(a => cnMap.set(a.w, a));
+  const enMap = new Map();
+  (answers.enAnswers || []).forEach(a => enMap.set(a.w, a));
+
+  let wordsHTML = '';
+  if (words.length === 0) {
+    wordsHTML = '<p style="color:var(--text-light);text-align:center">该日无详细记录</p>';
+  } else {
+    words.forEach(w => {
+      const cn = cnMap.get(w.w);
+      const en = enMap.get(w.w);
+      const cnOk = cn && cn.correct;
+      const enOk = en && en.correct;
+      const allOk = cnOk && enOk;
+
+      wordsHTML += `
+        <div style="padding:14px 16px;background:var(--bg);border-radius:12px;margin-bottom:10px;border-left:4px solid ${allOk ? 'var(--correct)' : 'var(--wrong)'}">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;cursor:pointer" onclick="openWordDetail('${w.w}')">
+            <strong style="font-size:17px;color:var(--green-dark)">${w.w}</strong>
+            <span style="font-size:13px;color:var(--brown-dark)">${w.m} · ${w.pos}</span>
+          </div>
+          <div style="font-size:13px;display:flex;flex-direction:column;gap:4px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="color:var(--text-light);min-width:44px">英→中</span>
+              ${cnOk
+                ? '<span style="color:var(--correct);font-weight:600">✓ 正确</span>'
+                : `<span style="color:var(--wrong)">你写：<b>${cn ? cn.user : '未答'}</b> → <span style="color:var(--correct)">${w.m}</span></span>`
+              }
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="color:var(--text-light);min-width:44px">中→英</span>
+              ${enOk
+                ? '<span style="color:var(--correct);font-weight:600">✓ 正确</span>'
+                : `<span style="color:var(--wrong)">你写：<b>${en ? en.user : '未答'}</b> → <span style="color:var(--correct)">${w.w}</span></span>`
+              }
+            </div>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  const totalQ = (answers.cnAnswers || []).length + (answers.enAnswers || []).length;
+  const totalCorrect = (answers.cnAnswers || []).filter(a => a.correct).length + (answers.enAnswers || []).filter(a => a.correct).length;
+  const scoreInfo = totalQ > 0 ? `正确率：${Math.round(totalCorrect / totalQ * 100)}%（${totalCorrect}/${totalQ}）` : (hist ? `掌握：${hist.mastered}/${hist.count}` : '');
+
+  document.getElementById('modal-content').innerHTML = `
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3>${dateStr}</h3>
+    <p style="text-align:center;font-size:14px;color:var(--text-light);margin-bottom:12px">${scoreInfo} · 共${words.length}词</p>
+    ${wordsHTML}
+    <div style="text-align:center;margin-top:16px">
+      <button class="nav-btn" onclick="closeModal()">关闭</button>
+    </div>
+  `;
+  document.getElementById('modal-overlay').classList.add('active');
+}
+
+function openWordDetail(wordStr) {
+  const w = WORD_BANK.find(w => w.w === wordStr);
+  if (!w) return;
+  const phrases = (w.ph || []).map(p => `<div class="phrase-item">${p}</div>`).join('');
+  const exprs = (w.xp || []).map(x => `<div class="expr-item">${x}</div>`).join('');
+  const musicals = (w.mu || []).map(m => `<div class="mu-item">${m}</div>`).join('');
+
+  document.getElementById('modal-content').innerHTML = `
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="study-card" style="box-shadow:none;padding:20px 0;min-height:auto">
+      <div class="word-en">${w.w}</div>
+      <div class="phonetic">${w.p} <span class="pos-tag">${w.pos}</span></div>
+      <div class="meaning-main">${w.m}</div>
+      <div class="detail-section">
+        <div class="detail-label">例句</div>
+        <div class="example-en">${w.ex}</div>
+        <div class="example-cn">${w.exc}</div>
+        ${phrases ? `<div class="detail-label">相关词组</div>${phrases}` : ''}
+        ${exprs ? `<div class="detail-label">地道表达</div>${exprs}` : ''}
+        ${musicals ? `<div class="detail-label">音乐剧引用</div>${musicals}` : ''}
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:12px">
+      <button class="nav-btn" onclick="openDay('${currentDayView}')">返回列表</button>
+      <button class="nav-btn" onclick="closeModal()">关闭</button>
+    </div>
+  `;
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('active');
+}
+
+function resetAll() {
+  if (!confirm('确定要清空所有学习记录并重新开始吗？此操作不可恢复。')) return;
+  state.history = {};
+  state.mistakeBank = {};
+  state.dailyWords = {};
+  state.dailyAnswers = {};
+  state.wordPool = [];
+  state.currentStudyIdx = 0;
+  state.phase = 'home';
+  state.lastPhase = 'home';
+  state.sessionActive = false;
+  state.quizCN = { current: 0, answers: [] };
+  state.quizEN = { current: 0, answers: [] };
+  saveState();
+  renderHome();
+}
+
+// ============ EVENT BINDINGS ============
+// Home page bindings
+document.querySelectorAll('#home-count-options .count-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    state.dailyCount = parseInt(btn.dataset.count);
+    saveState();
+    document.querySelectorAll('#home-count-options .count-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    renderHome();
+  });
+});
+
+document.getElementById('btn-start-home').addEventListener('click', startStudy);
+document.getElementById('btn-reset').addEventListener('click', resetAll);
+
+// Settings page bindings (legacy)
+document.querySelectorAll('#view-settings .count-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    state.dailyCount = parseInt(btn.dataset.count);
+    saveState();
+    document.querySelectorAll('.count-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  });
+});
+
+document.getElementById('btn-start').addEventListener('click', startStudy);
+
+document.getElementById('btn-prev-word').addEventListener('click', () => {
+  if (state.currentStudyIdx > 0) {
+    state.currentStudyIdx--;
+    renderStudy();
+  }
+});
+document.getElementById('btn-next-word').addEventListener('click', () => {
+  if (state.currentStudyIdx < state.wordPool.length - 1) {
+    state.currentStudyIdx++;
+    renderStudy();
+  }
+});
+document.getElementById('btn-to-quiz-cn').addEventListener('click', startQuizCN);
+
+// Keyboard navigation for study
+document.addEventListener('keydown', e => {
+  if (state.phase === 'study') {
+    if (e.key === 'ArrowLeft' && state.currentStudyIdx > 0) {
+      state.currentStudyIdx--;
+      renderStudy();
+    } else if (e.key === 'ArrowRight' && state.currentStudyIdx < state.wordPool.length - 1) {
+      state.currentStudyIdx++;
+      renderStudy();
+    }
+  }
+});
+
+// ============ SAVE / LOAD ============
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+function loadState() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (raw) {
+    try {
+      const saved = JSON.parse(raw);
+      state.history = saved.history || {};
+      state.dailyCount = saved.dailyCount || 50;
+      state.mistakeBank = saved.mistakeBank || {};
+      state.dailyWords = saved.dailyWords || {};
+      state.dailyAnswers = saved.dailyAnswers || {};
+      // Restore session progress if it was active
+      state.sessionActive = saved.sessionActive || false;
+      state.lastPhase = saved.lastPhase || 'home';
+      state.phase = saved.phase || 'home';
+      state.wordPool = saved.wordPool || [];
+      state.currentStudyIdx = saved.currentStudyIdx || 0;
+      state.quizCN = saved.quizCN || { current: 0, answers: [] };
+      state.quizEN = saved.quizEN || { current: 0, answers: [] };
+    } catch(e) {}
+  }
+}
+
+// ============ INIT ============
+loadState();
+renderHome();
+</script>
+</body>
+</html>
